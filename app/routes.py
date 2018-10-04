@@ -1,13 +1,17 @@
 from flask import render_template,request
 from app import app,db
 from controllers import postController as pC
+from controllers import lightsController as lC
 from app.models import Satellite
 import json
 
 @app.route("/")
 def hello():
-    return ("Hello world")
+    return ("Hello world!!")
 
+@app.route("/lights/<int:number>", methods=['PUT'])
+def updateLight(number):
+    lC.UpdateLight(number, request.data)
 
 @app.route("/home/<string:name>", methods=['POST', 'GET'])
 def home(name):
