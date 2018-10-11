@@ -2,6 +2,7 @@ from flask import render_template,request,flash
 from app import app,db
 from controllers import postController as pC
 from controllers import lightsController as lC
+from controllers import satelliteController as sC
 from app.models import Satellite
 import pychromecast
 import json
@@ -11,71 +12,75 @@ CHROMECASTS = pychromecast.get_chromecasts() #Takes time to load!
 print("Done loading CCs")
 CC_NAME = "TT"
 
-@app.route("/")
-def hello():
+@app.route("/", methods=['POST','GET'])
+def main():
   form = f.ConnectForm()
   s = Satellite.query.all()
 
-  # if request.method == 'POST':
-  #   if form.validate() == False:
-  #     flash()
 
+  if request.method == 'POST':
+    if form.validate() == False:
+      flash('All fields are required.')
+      return render_template('info.html',sats=s, form=form)
+    else:
+      res = sC.connect(request)
+      if res:
+        flash("Success")
+      else:
+        flash("Fail")
+      s = Satellite.query.all()
+      return render_template('info.html',sats=s, form=form)
+  else:
+    return render_template('info.html',sats=s, form=form)
 
-
-
+@app.route("/<int:id>")
+def disconnect(id):
+  res = sC.disconnect(id)
+  if res:
+    flash("Succefully disconnected")
+  else:
+    flash("Something went wrong, trying updating site!")
+  s = Satellite.query.all()
+  form = f.ConnectForm()
   return render_template("info.html", sats=s, form=form)
+  
+
+@app.route("/home")
+def home():
+  return render_template("front.html")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 @app.route("/lights/<int:number>", methods=['PUT'])
 def updateLight(number):
     lC.UpdateLight(number, request.data)
 
-@app.route("/home/<string:name>", methods=['POST', 'GET'])
-def home(name):
-    s = Satellite.query.filter(Satellite.name == name)
-    if not s.first():
-        return render_template("home.html", name="fuck")
-    return render_template("home.html", name=s.first().name)
-@app.route("/disconnect/<int:id>")
-def disconnect(id):
-  sat = Satellite.query.get(id)
-  db.session.delete(sat)
-  db.session.commit()
-  s = Satellite.query.all()
-  return render_template("info.html", sats=s)
 
-@app.route("/connect", methods=['POST'])
-def connectSatellitePost():
-    name = request.form.get('name')
-    ip = request.form.get('ip')
-    port = request.form.get('port')
-    s = Satellite.query.filter(Satellite.ip == ip).filter(Satellite.port == port)
-    if not s.first(): #if no results found
-        satellite = Satellite(ip=ip,port=port,name=name)
-        db.session.add(satellite)
-        db.session.commit()
-        return("added!")
-    return("nope!")
 
-@app.route("/connect/<string:ip>/<int:port>/<string:name>")
-def connectSatellite(ip,port,name):
-    s = Satellite.query.filter(Satellite.ip == ip).filter(Satellite.port == port)
-    if not s.first(): #if no results found
-        satellite = Satellite(ip=ip,port=port,name=name)
-        db.session.add(satellite)
-        db.session.commit()
-        return("added!")
-    return("nope!")
-        
-@app.route("/connect",methods=['POST','GET'])
-def connect():
-    print(request.method)
 
-    if request.method == 'POST':
-        return connectPOST(request)
-    elif request.method == 'GET':
-        return connectGET(request)
-    else:
-        return render_template('home.html',name="marek")
+
 
 @app.route("/music/play", methods=['POST'])
 def play():

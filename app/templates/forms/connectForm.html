@@ -1,0 +1,26 @@
+{% block connectForm %}
+
+<div class="container">
+    <form action="/" method="POST">
+      {{ form.hidden_tag() }}
+      <div class="form-group">
+        {{ form.name.label }}
+        {{ form.name(class="form-control", placeholder="Name",autocomplete="off")}}
+      </div>
+      <div class="row">
+        <div class="form-group col-6">
+          {{ form.ip.label }}
+          {{ form.ip(class="form-control", placeholder="IP", autocomplete="off")}}
+        </div>
+        <div class="form-group col-6">
+          {{ form.port.label }}
+          {{ form.port(class="form-control", placeholder="Port", autocomplete="off")}}
+        </div> 
+        <div class="form-group col-12">
+          {{ form.submit(class="btn btn-primary col-12") }}
+        </div>
+      </div>
+    </form>
+  </div>
+
+{% endblock %}
