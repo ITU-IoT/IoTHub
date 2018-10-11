@@ -1,0 +1,16 @@
+{% extends 'main.html' %}
+
+{% block content %}
+  <div class="container-fluid">
+    {% for sat in sats %}
+      <div class="card col-2">
+        <div class="card-body">
+          <h5 class="card-title">{{ sat.name}}</h5>
+          <p class="card-text"> 
+            {{ sat.ip}} : {{ sat.port }}  
+          </p>
+        </div>  
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}

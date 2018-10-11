@@ -7,7 +7,8 @@ import json
 
 @app.route("/")
 def hello():
-    return ("Hello world!!")
+  s = Satellite.query.all()
+  return render_template("info.html", sats=s)
 
 @app.route("/lights/<int:number>", methods=['PUT'])
 def updateLight(number):
