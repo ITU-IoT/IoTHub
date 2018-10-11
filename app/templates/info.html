@@ -1,16 +1,75 @@
 {% extends 'main.html' %}
 
 {% block content %}
-  <div class="container-fluid">
-    {% for sat in sats %}
-      <div class="card col-2">
-        <div class="card-body">
-          <h5 class="card-title">{{ sat.name}}</h5>
-          <p class="card-text"> 
-            {{ sat.ip}} : {{ sat.port }}  
-          </p>
-        </div>  
+  <br>  
+  <div class="container">
+    <form method="POST" action="/connect" >
+      <div class="form-group">
+        <label for="name1">Name</label>
+        <input type="text" class="form-control" id="name1" name="name" placeholder="Name">
       </div>
+      <div class="row">
+        <div class="form-group col-6">
+          <label for="ip1">IP</label>
+          <input type="text" class="form-control" id="ip1" name="ip" placeholder="IP"> 
+        </div>
+        <div class="form-group col-6" >
+          <label for="port1">PORT</label>
+          <input type="number" class="form-control" id="port1" name="port" placeholder="Port">
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary col-12">Connect</button>
+    </form>
+  </div>
+
+  <hr>
+  <form action="/connect" method="POST">
+    {{ form.hidden_tag() }}
+    <div class="form-group">
+      {{ form.name.label }}
+      {{ form.name(class="form-control", placeholder="Name")}}
+    </div>
+    <div class="row">
+      <div class="form-group col-6">
+        {{ form.ip.label }}
+        {{ form.ip(class="form-control", placeholder="IP")}}
+      </div>
+      <div class="form-group col-6">
+        {{ form.port.label }}
+        {{ form.port(class="form-control", placeholder="Port")}}
+      </div>  
+    </div>
+
+
+
+  </form>
+
+  <hr>
+  
+  <div class="container">
+    <div class="row">
+        {% for sat in sats %}
+          <div class="card col-4">
+            <div class="card-body">
+              <h5 class="card-title">{{ sat.name}}</h5>
+              <p class="card-text"> 
+                {{ sat.ip}} : {{ sat.port }}  
+              </p>
+              
+              <a href="/disconnect/{{sat.id}}"><button class="btn btn-primary">Disconnect</button></a>
+            </div>  
+          </div>
+        {% endfor %}
+      </div>
+  </div>
+
+
+  <div class="container">
+    {% for msg in messages %}
+    <div class="alert alert-warning">
+      <button type="button" class="close">&times</button>
+      {{ msg }}
+    </div>
     {% endfor %}
   </div>
 {% endblock %}

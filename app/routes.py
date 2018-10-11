@@ -1,14 +1,24 @@
-from flask import render_template,request
+from flask import render_template,request,flash
 from app import app,db
 from controllers import postController as pC
 from controllers import lightsController as lC
-from app.models import Satellite
+from app.models import Satellite 
 import json
+from forms import forms as f
 
 @app.route("/")
 def hello():
+  form = f.ConnectForm()
   s = Satellite.query.all()
-  return render_template("info.html", sats=s)
+
+  # if request.method == 'POST':
+  #   if form.validate() == False:
+  #     flash()
+
+
+
+
+  return render_template("info.html", sats=s, form=form)
 
 @app.route("/lights/<int:number>", methods=['PUT'])
 def updateLight(number):
@@ -20,6 +30,26 @@ def home(name):
     if not s.first():
         return render_template("home.html", name="fuck")
     return render_template("home.html", name=s.first().name)
+@app.route("/disconnect/<int:id>")
+def disconnect(id):
+  sat = Satellite.query.get(id)
+  db.session.delete(sat)
+  db.session.commit()
+  s = Satellite.query.all()
+  return render_template("info.html", sats=s)
+
+@app.route("/connect", methods=['POST'])
+def connectSatellitePost():
+    name = request.form.get('name')
+    ip = request.form.get('ip')
+    port = request.form.get('port')
+    s = Satellite.query.filter(Satellite.ip == ip).filter(Satellite.port == port)
+    if not s.first(): #if no results found
+        satellite = Satellite(ip=ip,port=port,name=name)
+        db.session.add(satellite)
+        db.session.commit()
+        return("added!")
+    return("nope!")
 
 
 @app.route("/connect/<string:ip>/<int:port>/<string:name>")
