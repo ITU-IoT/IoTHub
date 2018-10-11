@@ -3,6 +3,7 @@ from app import app,db
 from controllers import postController as pC
 from controllers import lightsController as lC
 from app.models import Satellite
+import pychromecast
 import json
 
 CHROMECASTS = pychromecast.get_chromecasts() #Takes time to load!
