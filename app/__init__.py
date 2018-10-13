@@ -8,6 +8,7 @@ import os
 
 app = Flask(__name__, template_folder="templates/")
 app.testing = True
+app.secret_key = 'development key'
 app._static_folder = os.path.abspath("static/")
 app.config.from_object(Config)
 db = SQLAlchemy(app)
