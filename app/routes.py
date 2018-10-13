@@ -12,8 +12,22 @@ CC_NAME = "TT"
 
 @app.route("/")
 def hello():
-  s = Satellite.query.all()
-  return render_template("info.html", sats=s)
+    s = Satellite.query.all()
+    return render_template("info.html", sats=s)
+
+@app.route("/sensor/beacon", methods=['POST'])
+def beacon():
+    json = request.json
+
+    if 'devices' not in json:
+        return "failure, missing devices"
+    if 'id' not in json:
+        return "failure, missing id"
+      
+    print("Received beacon sensor value from "+json['id']+": ")
+    print(json['devices'])
+    
+    return ""
 
 @app.route("/lights/<int:number>", methods=['PUT'])
 def updateLight(number):
