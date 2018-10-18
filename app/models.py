@@ -15,8 +15,8 @@ class Satellite(db.Model):
 
 class Song(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    Title = db.Column(db.String(64))
-    Artist = db.Column(db.String(64))
+    title = db.Column(db.String(64))
+    artist = db.Column(db.String(64))
     link = db.Column(db.String(128))
 
 class CC(db.Model):
