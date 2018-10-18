@@ -3,7 +3,8 @@ from app import app,db
 from controllers import postController as pC
 from controllers import lightsController as lC
 from controllers import satelliteController as sC
-from app.models import Satellite, Mobile
+
+from app.models import Satellite, Mobile, Song
 import pychromecast
 import json
 import flask
@@ -135,6 +136,13 @@ def light():
     print(json['value'])
     
     return ""
+
+@app.route("/new")
+def new():
+  form = f.ConnectForm()
+  songs = Song.query.all()
+  return render_template('songs.html',form=form, songs=songs)
+
 
 def connectPOST(request):
     if not request.json:

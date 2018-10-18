@@ -25,7 +25,17 @@
     ],
     "scope": "python",
     "description": "Creates a new function"
+  },
+  "New Div":{
+    "prefix": ["d","di","div"],
+    "body": ["<div class='$1'>",
+             " $0",
+             "</div>"],
+    "description": "Creates a new div with a class",
+    "scope": "html"
   }
+
+  
   
 
 }
