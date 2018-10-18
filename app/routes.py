@@ -3,11 +3,8 @@ from app import app,db
 from controllers import postController as pC
 from controllers import lightsController as lC
 from controllers import satelliteController as sC
-<<<<<<< HEAD
-from app.models import Satellite,Song
-=======
-from app.models import Satellite, Mobile
->>>>>>> a046d7cf7d6b72053c1865faff049b4e837d5b43
+
+from app.models import Satellite, Mobile, Song
 import pychromecast
 import json
 from forms import forms as f
