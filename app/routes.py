@@ -31,8 +31,7 @@ def beacon():
 def getMac():
   macs = Mobile.query.all()
 
-  print(macs)
-  return json.JSONEncoder().encode(macs)
+  return json.JSONEncoder().encode({"devices" : macs})
 
 @app.route("/", methods=['POST','GET'])
 def main():
