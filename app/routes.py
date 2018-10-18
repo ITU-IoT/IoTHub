@@ -30,8 +30,10 @@ def beacon():
 @app.route("/sensor/beacon/device", methods=['GET'])
 def getMac():
   macs = Mobile.query.all()
+  print(macs)
+  dict_list = [row2dict(m) for m in macs]
 
-  return json.JSONEncoder().encode({"devices" : macs})
+  return json.JSONEncoder().encode({"devices" : dict_list})
 
 @app.route("/", methods=['POST','GET'])
 def main():
@@ -156,3 +158,9 @@ def getMediaController():
     cast = next(cc for cc in CHROMECASTS if cc.device.friendly_name == CC_NAME)
     cast.wait()
     return cast.media_controller, cast
+
+def row2dict(row):
+    d = {}
+    for column in row.__table__.columns:
+        d[column.name] = str(getattr(row, column.name))
+    return d
