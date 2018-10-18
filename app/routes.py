@@ -3,7 +3,7 @@ from app import app,db
 from controllers import postController as pC
 from controllers import lightsController as lC
 from controllers import satelliteController as sC
-from app.models import Satellite
+from app.models import Satellite, Mobile
 import pychromecast
 import json
 from forms import forms as f
@@ -25,6 +25,14 @@ def beacon():
     print(json['devices'])
     
     return ""
+
+
+@app.route("/sensor/beacon/device", methods=['GET'])
+def getMac():
+  macs = Mobile.query.all()
+
+  print(macs)
+  return json.JSONEncoder().encode(macs)
 
 @app.route("/", methods=['POST','GET'])
 def main():
