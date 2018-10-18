@@ -12,6 +12,20 @@ CHROMECASTS = pychromecast.get_chromecasts() #Takes time to load!
 print("Done loading CCs")
 CC_NAME = "TT"
 
+@app.route("/sensor/beacon", methods=['POST'])
+def beacon():
+    json = request.json
+
+    if 'devices' not in json:
+        return "failure, missing devices"
+    if 'id' not in json:
+        return "failure, missing id"
+      
+    print("Received beacon sensor value from "+json['id']+": ")
+    print(json['devices'])
+    
+    return ""
+
 @app.route("/", methods=['POST','GET'])
 def main():
   form = f.ConnectForm()
@@ -49,38 +63,9 @@ def disconnect(id):
 def home():
   return render_template("front.html")
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 @app.route("/lights/<int:number>", methods=['PUT'])
 def updateLight(number):
     lC.UpdateLight(number, request.data)
-
-
-
-
-
 
 @app.route("/music/play", methods=['POST'])
 def play():
