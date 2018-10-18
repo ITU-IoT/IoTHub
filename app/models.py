@@ -1,60 +1,62 @@
 from app import db
 
+
+class Room(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64))
+
+
 class Satellite(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     ip = db.Column(db.String(64))
-    roomId = db.Column(db.Integer)
     port = db.Column(db.Integer)
     name = db.Column(db.String(64))
+    roomId = db.Column(db.Integer)
 
-class song(db.Model):
+class Song(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64))
     link = db.Column(db.String(128))
 
-class cc(db.Model):
+class CC(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64))
     room = db.Column(db.Integer)    
 
-class mobile(db.Model):
+class Mobile(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64))
     mac = db.Column(db.String(64))
 
-class light(db.Model):
+class Light(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64))
     room = db.Column(db.Integer) 
 
-class room(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64))
+# '''
+# Room model:
+# ###########################################################################################################
+# #                                                                                                         #
+# #             id                                                                                          #
+# #             name                                                                                        #
+# #                                                                      #####################              #
+# #                                                                      #         #         #              #
+# #                                                                      #         #         #              #
+# #                                                                      #         #         #              #
+# #                                                                      #####################              #
+# #                                                                      #         #         #              #
+# #                                                                      #         #         #              #
+# #                                                                      #         #         #              #
+# #                                                                      #####################              #
+# #                                                                                                         #
+# #           ##################################                                                            #
+# #           #                #               #                                                            #
+# #           #                #               #                                                            #
+# #       #####                #               #####                                                        #
+# #       #   #                #               #   #                                                        #
+# #       #   ##################################   #                                                        # 
+# #       #   #                                #   #                                                        #
+# #       #   #                                #   #                                                        #
+# ###########################################################################################################
 
-'''
-Room model:
-###########################################################################################################
-#                                                                                                         #
-#             id                                                                                          #
-#             name                                                                                        #
-#                                                                      #####################              #
-#                                                                      #         #         #              #
-#                                                                      #         #         #              #
-#                                                                      #         #         #              #
-#                                                                      #####################              #
-#                                                                      #         #         #              #
-#                                                                      #         #         #              #
-#                                                                      #         #         #              #
-#                                                                      #####################              #
-#                                                                                                         #
-#           ##################################                                                            #
-#           #                #               #                                                            #
-#           #                #               #                                                            #
-#       #####                #               #####                                                        #
-#       #   #                #               #   #                                                        #
-#       #   ##################################   #                                                        # 
-#       #   #                                #   #                                                        #
-#       #   #                                #   #                                                        #
-###########################################################################################################
-
-'''
+# '''
