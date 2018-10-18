@@ -3,6 +3,7 @@ from app import app,db
 from controllers import postController as pC
 from controllers import lightsController as lC
 from controllers import satelliteController as sC
+from controllers import locationController as locC
 from app.models import Satellite, Mobile
 import pychromecast
 import json
@@ -23,13 +24,15 @@ def beacon():
       
     print("Received beacon sensor value from "+json['id']+": ")
     print(json['devices'])
-    
+    locC.determineRoom(json['id'], json['devices'])
     return ""
 
 
 @app.route("/sensor/beacon/device", methods=['GET'])
 def getMac():
   macs = Mobile.query.all()
+
+  
 
   return json.JSONEncoder().encode({"devices" : macs})
 
@@ -123,6 +126,11 @@ def pause():
 
     return "success"
 
+@app.route("/h")
+def h():
+  locC.determineRoom()
+  return ""   
+
 @app.route("/sensor/light", methods=['POST'])
 def light():
     json = request.json
@@ -156,3 +164,6 @@ def getMediaController():
     cast = next(cc for cc in CHROMECASTS if cc.device.friendly_name == CC_NAME)
     cast.wait()
     return cast.media_controller, cast
+
+
+ 
