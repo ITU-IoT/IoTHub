@@ -6,6 +6,7 @@ from controllers import satelliteController as sC
 from app.models import Satellite, Mobile
 import pychromecast
 import json
+import flask
 from forms import forms as f
 
 CHROMECASTS = pychromecast.get_chromecasts() #Takes time to load!
@@ -30,10 +31,8 @@ def beacon():
 @app.route("/sensor/beacon/device", methods=['GET'])
 def getMac():
   macs = Mobile.query.all()
-  print(macs)
   dict_list = [row2dict(m) for m in macs]
-
-  return json.JSONEncoder().encode({"devices" : dict_list})
+  return flask.jsonify({"devices" : dict_list})
 
 @app.route("/", methods=['POST','GET'])
 def main():
