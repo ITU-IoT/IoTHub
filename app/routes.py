@@ -3,7 +3,11 @@ from app import app,db
 from controllers import postController as pC
 from controllers import lightsController as lC
 from controllers import satelliteController as sC
+<<<<<<< HEAD
 from app.models import Satellite,Song
+=======
+from app.models import Satellite, Mobile
+>>>>>>> a046d7cf7d6b72053c1865faff049b4e837d5b43
 import pychromecast
 import json
 from forms import forms as f
@@ -25,6 +29,15 @@ def beacon():
     print(json['devices'])
     
     return ""
+
+
+@app.route("/sensor/beacon/device", methods=['GET'])
+def getMac():
+  macs = Mobile.query.all()
+  print(macs)
+  dict_list = [row2dict(m) for m in macs]
+
+  return json.JSONEncoder().encode({"devices" : dict_list})
 
 @app.route("/", methods=['POST','GET'])
 def main():
@@ -156,3 +169,9 @@ def getMediaController():
     cast = next(cc for cc in CHROMECASTS if cc.device.friendly_name == CC_NAME)
     cast.wait()
     return cast.media_controller, cast
+
+def row2dict(row):
+    d = {}
+    for column in row.__table__.columns:
+        d[column.name] = str(getattr(row, column.name))
+    return d
