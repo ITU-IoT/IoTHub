@@ -21,7 +21,7 @@
 		"prefix": ["fun","def"],
 		"body": [
 			"def $1($2):",
-			"$3"
+			" $3"
     ],
     "scope": "python",
     "description": "Creates a new function"
