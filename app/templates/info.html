@@ -17,6 +17,21 @@
               </p>
               
               <a href="/{{sat.id}}"><button class="btn btn-primary">Disconnect</button></a>
+              <a href="/mute/{{sat.id}}"> 
+                <button class="btn btn-default">
+                  <div class="room-mute">
+                    Mute
+                  </div>
+                </button>
+              </a>
+
+              <a href="/lights/{{sat.id}}">
+                <button class="btn btn-default">
+                  <div class="room-lights">Lights ON</div>
+                </button>
+              </a>
+              
+                
             </div>  
           </div>
         {% endfor %}

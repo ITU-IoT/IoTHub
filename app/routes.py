@@ -4,9 +4,10 @@ from controllers import postController as pC
 from controllers import lightsController as lC
 from controllers import satelliteController as sC
 from controllers import locationController as locC
-from app.models import Satellite, Mobile
+from app.models import Satellite, Mobile,Song
 import pychromecast
 import json
+import flask
 from forms import forms as f
 
 CHROMECASTS = pychromecast.get_chromecasts() #Takes time to load!
@@ -31,10 +32,8 @@ def beacon():
 @app.route("/sensor/beacon/device", methods=['GET'])
 def getMac():
   macs = Mobile.query.all()
-
-  
-
-  return json.JSONEncoder().encode({"devices" : macs})
+  dict_list = [row2dict(m) for m in macs]
+  return flask.jsonify({"devices" : dict_list})
 
 @app.route("/", methods=['POST','GET'])
 def main():
@@ -143,6 +142,13 @@ def light():
     
     return ""
 
+@app.route("/new")
+def new():
+  form = f.ConnectForm()
+  songs = Song.query.all()
+  return render_template('songs.html',form=form, songs=songs)
+
+
 def connectPOST(request):
     if not request.json:
         return "wrong"
@@ -165,5 +171,8 @@ def getMediaController():
     cast.wait()
     return cast.media_controller, cast
 
-
- 
+def row2dict(row):
+    d = {}
+    for column in row.__table__.columns:
+        d[column.name] = str(getattr(row, column.name))
+    return d

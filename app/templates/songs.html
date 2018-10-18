@@ -1,0 +1,38 @@
+{% extends 'main.html' %}
+
+
+
+{% block content %}
+
+<div class='container'>
+  <div class='container'>
+    <table class="table table-{1:striped|sm|bordered|hover|inverse} table-inverse table-responsive">
+      <thead class="thead-inverse|thead-default">
+        <tr>
+          <th>Title</th>
+          <th>Artist</th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody>
+          {% for song in songs %}
+          <tr>
+            <td scope="row">{{song.title}}</td>
+            <td>{{song.artist}}</td>
+            <td><a href="/play/{{song.id}}" class="card-link">Play</a></td>
+          </tr>
+
+          {% endfor%}
+          <tr>
+            <td scope="row"></td>
+            <td></td>
+            <td></td>
+          </tr>
+          
+        </tbody>
+    </table>
+    
+  </div>
+</div>
+
+{% endblock %}
