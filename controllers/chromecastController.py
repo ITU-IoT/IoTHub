@@ -22,7 +22,7 @@ def PlaySong(roomIds,song, songTime=0):
     if c is None:
       return
     mc = c.media_controller
-    mc.pause()
+    mc.pause() 
 
   for cast in ccs:
     c = GetChromecast(cast.name)
@@ -48,13 +48,16 @@ def ChangeRoom(roomIds):
       continue
     status = IsPlaying(cast.name)
     print("Name: ", cast.device.friendly_name, " Status: ", status )
-    if status:
+    if status and any(cr for cr in roomIds if c.roomId == cr):
+      continue
+    elif status:
       mc = cast.media_controller
       song = mc.status.content_id
       timestamp = mc.status.adjusted_current_time
       print("TimeStamp: ", timestamp, " Song: ", song)
       PlaySong(roomIds,song,timestamp)
-      break
+    else:
+      continue
       
 
  

@@ -89,8 +89,11 @@ def beacon():
 
 @app.route("/sensor/beacon/device", methods=['GET'])
 def getMac():
+  print("getting devices")
   macs = Mobile.query.all()
+  print("creating list of devices")
   dict_list = [row2dict(m) for m in macs]
+  print("returning devices")
   return flask.jsonify({"devices" : dict_list})
 
 @app.route("/new")
