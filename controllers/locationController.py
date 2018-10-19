@@ -28,10 +28,11 @@ def UpdateLocationData(json):
   # print(devices['name'])
   #already in db
   for d in devices:
+    deviceName = d['name']
     UpdateSignal = None
 
     for signal, name in currentSignal:
-      if d['name'] == name:
+      if deviceName == name:
         signal.rssi = d['rssi']
         signal.timestamp = datetime.now()
         UpdateSignal = signal
@@ -40,7 +41,7 @@ def UpdateLocationData(json):
 
     #Create
     if UpdateSignal is None:
-      mobile = Mobile.query.filter(Mobile.name == d['name']).first()
+      mobile = Mobile.query.filter(Mobile.name == deviceName).first()
       s = CurrentSignals(mobileId=mobile.id,roomId=satellite.roomId,rssi=d['rssi'],timestamp=datetime.now())
       db.session.add(s)
       db.session.commit()
