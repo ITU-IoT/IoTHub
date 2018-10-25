@@ -43,7 +43,9 @@ def disconnect(id):
   s = Satellite.query.all()
   form = f.ConnectForm()
   return render_template("info.html", sats=s, form=form)
-  
+
+# @app.route("/status/<int:id>")
+# def status():  
 
 @app.route("/home")
 def home():
@@ -71,6 +73,10 @@ def light():
     
     return("")
 
+@app.route("/ttt")
+def ttt():
+  return str(ccC.IsPlaying("Bumboks"))
+
 @app.route("/sensor/beacon", methods=['POST'])
 def beacon():
     json = request.json
@@ -85,7 +91,6 @@ def beacon():
     locC.UpdateLocationData(json)
     locC.determineRoom()
     return ""
-
 
 @app.route("/sensor/beacon/device", methods=['GET'])
 def getMac():
