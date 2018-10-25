@@ -43,8 +43,7 @@ def UpdateLocationData(json):
         signal.timestamp = datetime.now()
         UpdateSignal = signal
         db.session.commit()
-        break
-
+        
     #Create
     if UpdateSignal is None:
       mobile = Mobile.query.filter(Mobile.name == deviceName).first()
@@ -55,12 +54,11 @@ def UpdateLocationData(json):
       s = CurrentSignals(mobileId=mobile.id,roomId=satellite.roomId,rssi=deviceRssi,timestamp=datetime.now())
       db.session.add(s)
       db.session.commit()
-      break
 
   for signal, name in currentSignal:
     if not any(d for d in devices if deviceName == name):
       db.session.delete(signal)
       db.session.commit()
-      break
+      continue
 
   
