@@ -20,18 +20,21 @@ def PlaySong(roomIds,song, songTime=0):
   for ccast in not_chromecasts:
     chromecast = GetChromecast(ccast.name)
     if chromecast is None:
-      return
+      continue
     mc = chromecast.media_controller
-    mc.pause() 
+    if IsPlaying(chromecast):
+      mc.pause()
 
   for ccast in chromecasts:
     chromecast = GetChromecast(ccast.name)
     if chromecast is None:
-      return
+      continue
     mc = chromecast.media_controller
+    if IsPlaying(chromecast) and mc.status.content_id == song:
+      continue
     mc.play_media(song,"audio/mp3",current_time=songTime)
-      
-    
+
+
 def GetChromecast(name):
   for chromecast in CHROMECASTS:
     if name == chromecast.device.friendly_name:
@@ -75,6 +78,6 @@ def ChangeRoom(roomIds):
     else:
       continue
       '''
-      
 
- 
+
+
