@@ -31,11 +31,12 @@ def UpdateLocationData(json):
     deviceName = a['name']
     deviceRssi = a['rssi']
     
-    print("Device name    ", deviceName)
     UpdateSignal = None
 
     for signal, name in currentSignal:
       if deviceName == name and signal.roomId == satellite.roomId:
+        if signal is None:
+          continue 
         signal.rssi = deviceRssi
         signal.timestamp = datetime.now()
         UpdateSignal = signal
@@ -51,7 +52,7 @@ def UpdateLocationData(json):
       db.session.commit()
 
   for signal, name in currentSignal:
-    if not any(d for d in devices if deviceName == name):
+    if not any(dvc for dvc in devices if devices[dvc]['name'] == name):
       db.session.delete(signal)
       db.session.commit()
       continue

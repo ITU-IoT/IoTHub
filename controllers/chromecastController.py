@@ -8,15 +8,20 @@ CHROMECASTS = pychromecast.get_chromecasts() #Takes time to load!
 print("Done loading chromecasts")
 
 def IsPlaying(cast):
+  global CHROMECASTS
   for chromecast in CHROMECASTS:
-    if cast == chromecast.device.friendly_name:
-      return chromecast.media_controller.status.player_state == 'PLAYING'
+    if cast.device.friendly_name == chromecast.device.friendly_name:
+      return chromecast.media_controller.status.player_is_playing
+        #return True
   return False
 
 def PlaySong(roomIds,song, songTime=0):
+  print(CHROMECASTS)
   chromecasts = db.session.query(CC).filter(CC.roomId.in_(roomIds)).all()
   not_chromecasts = db.session.query(CC).filter(~CC.roomId.in_(roomIds)).all()
 
+  print(chromecasts)
+  print(not_chromecasts)
   for ccast in not_chromecasts:
     chromecast = GetChromecast(ccast.name)
     if chromecast is None:
@@ -30,6 +35,9 @@ def PlaySong(roomIds,song, songTime=0):
     if chromecast is None:
       continue
     mc = chromecast.media_controller
+    print(mc.status.content_id)
+    print(chromecast)
+    print(IsPlaying(chromecast))
     if IsPlaying(chromecast) and mc.status.content_id == song:
       print("I am already playing")
       continue
@@ -50,7 +58,9 @@ def ChangeRoom(roomIds):
 
   for ccast in chromesasts:
     chromecast = GetChromecast(ccast.name)
-    if IsPlaying(chromecast.name):
+    print(chromecast.media_controller.status)
+    if IsPlaying(chromecast):
+      print("is definetly playing")
       mc = chromecast.media_controller
       song = mc.status.content_id
       timestamp = mc.status.adjusted_current_time
