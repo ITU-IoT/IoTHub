@@ -31,7 +31,9 @@ def PlaySong(roomIds,song, songTime=0):
       continue
     mc = chromecast.media_controller
     if IsPlaying(chromecast) and mc.status.content_id == song:
+      print("I am already playing")
       continue
+    print("I need to play this song: ", song)
     mc.play_media(song,"audio/mp3",current_time=songTime)
 
 
