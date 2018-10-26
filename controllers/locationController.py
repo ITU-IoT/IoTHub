@@ -11,7 +11,6 @@ MUSIC_START_TIME = 0
 
 def determineRoom():
   roomIds = GetCurrentRoomIds()
-  print("My room ids are: ", roomIds)
   ccC.ChangeRoom(roomIds)
 
 
@@ -19,14 +18,11 @@ def determineRoom():
 def UpdateLocationData(json):
   devices = json['devices']
   satelliteName = json['name'] 
-  print(type(devices))
   satellite = db.session.query(Satellite.roomId).filter(Satellite.name == satelliteName).first()
   currentSignal = db.session.query(CurrentSignals,Mobile.name).join(Mobile,Mobile.id == CurrentSignals.mobileId).filter(CurrentSignals.roomId == satellite.roomId).all()
   
   for d in devices.values():
     val = d
-    print(val)
-    print(type(val))
     deviceName = val['name']
     deviceRssi = val['rssi']
 
@@ -36,14 +32,12 @@ def UpdateLocationData(json):
   DeleteSignal(devices, currentSignal)
    
 def CreateSignal(currentSignals, satellite, deviceName, deviceRssi):
-  print("CreateSignal")
   mobile = Mobile.query.filter(Mobile.name == deviceName).first()
   if not mobile:
     return "One or more phones are note added to the db"
   mobileId = mobile.id
   #add only if unique mobileId and roomId
   if not any(sig for sig,name in currentSignals if (sig.mobileId == mobileId and sig.roomId == satellite.roomId)) :
-    print("any")
     s = CurrentSignals(mobileId=mobileId,roomId=satellite.roomId,rssi=deviceRssi,timestamp=datetime.now())
     db.session.add(s)
     db.session.commit()
@@ -52,7 +46,6 @@ def CreateSignal(currentSignals, satellite, deviceName, deviceRssi):
   #only add if the array is empty
   if not currentSignals:
     s = CurrentSignals(mobileId=mobileId,roomId=satellite.roomId,rssi=deviceRssi,timestamp=datetime.now())
-    print("i should not be adding")
     db.session.add(s)
     db.session.commit()
     return
@@ -82,8 +75,10 @@ def DeleteSignal(devices, currentSignal):
 
 def GetCurrentRoomIds():
   current_signals = db.session.query(CurrentSignals.roomId,func.max(CurrentSignals.rssi)).group_by(CurrentSignals.mobileId).all()
-  print(current_signals)
   roomIds = [s for s,x in current_signals]
   return roomIds
 
-  
+def GetCurrentRooms():
+  rooms = Room.query.all()
+  roomNames = [s for s in rooms]
+  return roomNames

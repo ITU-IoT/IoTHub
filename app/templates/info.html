@@ -42,20 +42,4 @@
 
   {% include 'slider.html' %}
 
-  <div class="container fixed-bottom">
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        {% for msg in messages %}
-        <div class="alert alert-warning">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          {{ msg }}
-        </div>
-        {% endfor %}
-      {% endif %}
-    {% endwith %}
-
-    
-  </div>
 {% endblock %}
