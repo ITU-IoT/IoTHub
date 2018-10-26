@@ -22,12 +22,14 @@ def determineRoom():
 def UpdateLocationData(json):
   devices = json['devices']
   satelliteName = json['name'] 
-
+  print(type(devices))
   satellite = db.session.query(Satellite.roomId).filter(Satellite.name == satelliteName).first()
   currentSignal = db.session.query(CurrentSignals,Mobile.name).join(Mobile,Mobile.id == CurrentSignals.mobileId).filter(CurrentSignals.roomId == satellite.roomId).all()
   
-  for d in devices:
-    val = list(d.values())[0]
+  for d in devices.values():
+    val = d
+    print(val)
+    print(type(val))
     deviceName = val['name']
     deviceRssi = val['rssi']
 
@@ -75,7 +77,7 @@ def UpdateSignal(currentSignals,deviceName,deviceRssi,satellite):
 
 def DeleteSignal(devices, currentSignal):
   for signal, name in currentSignal:
-    if not any(d for d in devices if list(d.values())[0]['name'] == name):
+    if not any(d for d in devices.values() if d['name'] == name):
       db.session.delete(signal)
       db.session.commit()
       continue
