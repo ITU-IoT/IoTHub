@@ -1,7 +1,7 @@
 import json
 import requests
 
-address = "http://localhost:8000/api/newdeveloper/lights/"
+address = "http://192.168.1.2/api/egZDzxX7ctoCDoXLKTxAPom6-a29XpVoQw1UvGpu/lights/"
 
 def UpdateLight(nmbr, putData):
     r = requests.put(address + str(nmbr) + "/state" , data = putData)
