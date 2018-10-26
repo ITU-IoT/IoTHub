@@ -7,7 +7,13 @@ import pychromecast
 CHROMECASTS = pychromecast.get_chromecasts() #Takes time to load!
 print("Done loading chromecasts")
 
+# def ChangeSonge(roomIds, song, songTime):
+#   chromecasts = db.session.query(CC).filter(CC.roomId.in_(roomIds)).all()x
 
+#   for ccast in chromecasts:
+#     chromecast = GetChromecast(ccast.name)
+
+ 
 
 def PlaySong(roomIds,song, songTime=0):
   chromecasts = db.session.query(CC).filter(CC.roomId.in_(roomIds)).all()

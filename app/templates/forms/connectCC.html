@@ -1,0 +1,23 @@
+{% block connectCC %}
+
+<div class="container">
+    <form action="/" method="POST">
+      {{ ccForm.hidden_tag() }}
+      <div class="form-group">
+        {{ ccForm.name.label }}
+        {{ ccForm.name(class="form-control", placeholder="Name",autocomplete="off")}}
+      </div>
+      <div class="row">
+        <div class="form-group col-6">
+          {{ ccForm.room.label }}
+          {{ ccForm.room(class="form-control", autocomplete="off")}}
+        </div>
+        
+        <div class="form-group col-12">
+          {{ ccForm.submit(class="btn btn-primary col-12") }}
+        </div>
+      </div>
+    </form>
+  </div>
+
+{% endblock %}

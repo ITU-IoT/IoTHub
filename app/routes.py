@@ -15,13 +15,14 @@ import time
 @app.route("/", methods=['POST','GET'])
 def main():
   form = f.ConnectForm()
+  ccForm = f.ConnectCC()
   s = Satellite.query.all()
 
 
   if request.method == 'POST':
     if form.validate() == False:
       flash('All fields are required.')
-      return render_template('info.html',sats=s, form=form)
+      return render_template('info.html',sats=s, form=form, ccForm=ccForm)
     else:
       res = sC.connect(request)
       if res:
@@ -29,9 +30,9 @@ def main():
       else:
         flash("Fail")
       s = Satellite.query.all()
-      return render_template('info.html',sats=s, form=form)
+      return render_template('info.html',sats=s, form=form, ccForm=ccForm)
   else:
-    return render_template('info.html',sats=s, form=form)
+    return render_template('info.html',sats=s, form=form, ccForm=ccForm)
 
 @app.route("/<int:id>")
 def disconnect(id):
@@ -103,9 +104,10 @@ def getMac():
 
 @app.route("/new")
 def new():
-  form = f.ConnectForm()
+  deviceForm = f.ConnectForm()
+  ccForm = f.ConnectCC()
   songs = Song.query.all()
-  return render_template('songs.html',form=form, songs=songs)
+  return render_template('songs.html',form=deviceForm, ccForm=ccForm, songs=songs)
 
 
 def connectPOST(request):
