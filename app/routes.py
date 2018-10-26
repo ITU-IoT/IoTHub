@@ -5,6 +5,7 @@ from controllers import lightsController as lC
 from controllers import satelliteController as sC
 from controllers import locationController as locC
 from controllers import chromecastController as ccC
+from controllers import songController as songC
 from app.models import Satellite, Mobile,Song
 import pychromecast
 import json
@@ -105,10 +106,19 @@ def getMac():
 @app.route("/new")
 def new():
   deviceForm = f.ConnectForm()
-  ccForm = f.ConnectCC()
   songs = Song.query.all()
-  return render_template('songs.html',form=deviceForm, ccForm=ccForm, songs=songs)
+  return render_template('songs.html',form=deviceForm, songs=songs)
 
+@app.route("/play/<int:id>", methods=['GET'])
+def play(id):
+    deviceForm = f.ConnectForm()
+    songs = Song.query.all()
+    ccC.StopCCs()
+    roomIds = locC.GetCurrentRoomIds()
+    songUrl = songC.GetSongUrl(id)
+    ccC.PlaySong(roomIds, songUrl)
+    flash("Song is now playing")
+    return render_template('songs.html',form=deviceForm, songs=songs)
 
 def connectPOST(request):
     if not request.json:

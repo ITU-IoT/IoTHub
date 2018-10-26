@@ -10,12 +10,9 @@ import json
 MUSIC_START_TIME = 0
 
 def determineRoom():
-  current_signals = db.session.query(CurrentSignals.roomId,func.max(CurrentSignals.rssi)).group_by(CurrentSignals.mobileId).all()
-  print(current_signals)
-  roomIds = [s for s,x in current_signals]
+  roomIds = GetCurrentRoomIds()
   print("My room ids are: ", roomIds)
   ccC.ChangeRoom(roomIds)
-
 
 
 
@@ -82,5 +79,11 @@ def DeleteSignal(devices, currentSignal):
       db.session.commit()
       continue
 
+
+def GetCurrentRoomIds():
+  current_signals = db.session.query(CurrentSignals.roomId,func.max(CurrentSignals.rssi)).group_by(CurrentSignals.mobileId).all()
+  print(current_signals)
+  roomIds = [s for s,x in current_signals]
+  return roomIds
 
   

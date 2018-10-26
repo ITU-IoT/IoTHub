@@ -7,15 +7,20 @@ import pychromecast
 CHROMECASTS = pychromecast.get_chromecasts() #Takes time to load!
 print("Done loading chromecasts")
 
-# def ChangeSonge(roomIds, song, songTime):
-#   chromecasts = db.session.query(CC).filter(CC.roomId.in_(roomIds)).all()x
+def StopCCs():
+  chromecasts = db.session.query(CC).all()
 
-#   for ccast in chromecasts:
-#     chromecast = GetChromecast(ccast.name)
+  for ccast in chromecasts:
+    chromecast = GetChromecast(ccast.name)
+    mc = chromecast.media_controller
+    mc.stop()
+    
 
  
 
 def PlaySong(roomIds,song, songTime=0):
+  print(roomIds)
+  print(song)
   chromecasts = db.session.query(CC).filter(CC.roomId.in_(roomIds)).all()
   not_chromecasts = db.session.query(CC).filter(~CC.roomId.in_(roomIds)).all()
 
@@ -29,7 +34,8 @@ def PlaySong(roomIds,song, songTime=0):
       mc.pause()
 
   for ccast in chromecasts:
-    print(ccast)
+    print(ccast.name)
+    print(type(ccast))
     chromecast = GetChromecast(ccast.name)
     if chromecast is None:
       print("i am none")
@@ -40,8 +46,6 @@ def PlaySong(roomIds,song, songTime=0):
       continue
     print("I need to play this song: ", song)
     mc.play_media(song,"audio/mp3",current_time=songTime)
-    mc.seek(songTime)
-
 
 
 def ChangeRoom(roomIds):
