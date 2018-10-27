@@ -31,16 +31,40 @@ class ConnectLightValidate(FlaskForm):
   room = IntegerField("Room")
   submit = SubmitField("Connect")
 
-class ConnectForm(FlaskForm):
+class ConnectSatellite(FlaskForm):
   name = TextField("Name")
   ip = TextField("IP", [validators.IPAddress("This is not a valid IP")])
   port = IntegerField("Port")
+  room = SelectField("Room", choices=GetRooms())
+  submit = SubmitField("Connect")
+
+class ConnectSatelliteValidate(FlaskForm):
+  name = TextField("Name")
+  ip = TextField("IP", [validators.IPAddress("This is not a valid IP")])
+  port = IntegerField("Port")
+  room = IntegerField("Room")
   submit = SubmitField("Connect")
 
 
 
 class ConnectCC(FlaskForm):
-  name = TextField("Name of device")
+  name = TextField("Name of device", [validators.data_required("You need a name")])
   room = SelectField("Room", choices=GetRooms())
   submit = SubmitField("Connect")
- 
+
+
+class ConnectCCValidate(FlaskForm):
+  name = TextField("Name of device", [validators.data_required("You need a name")])
+  room = IntegerField("Room")
+  submit = SubmitField("Connect") 
+
+class ConnectSong(FlaskForm):
+  title = TextField("Title")
+  artist = TextField("Artist")
+  link = TextField("Link")
+  submit = SubmitField("Add song")
+
+class ConnectMobile(FlaskForm):
+  name = TextField("Name") 
+  mac = TextField("MAC")
+  submit = SubmitField("Add device")

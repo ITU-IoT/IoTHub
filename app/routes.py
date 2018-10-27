@@ -1,4 +1,4 @@
-from flask import render_template,request,flash
+from flask import render_template,request,flash,redirect,url_for
 from app import app,db
 from controllers import postController as pC
 from controllers import lightsController as lC
@@ -15,9 +15,10 @@ import time
 
 @app.route("/", methods=['POST','GET'])
 def main():
-  lC.GetLights()
-  form = f.ConnectForm()
+  form = f.ConnectSatellite()
   ccForm = f.ConnectCC()
+  mobileForm = f.ConnectMobile()
+  songForm = f.ConnectSong()
   s = Satellite.query.all()
   lightForm = f.ConnectLight()
 
@@ -34,10 +35,12 @@ def main():
       s = Satellite.query.all()
       return render_template('info.html',sats=s, form=form, ccForm=ccForm)
   else:
-    return render_template('info.html',sats=s, form=form, ccForm=ccForm, lightForm=lightForm)
+    return render_template('info.html',sats=s, form=form, ccForm=ccForm, mobileForm=mobileForm, songForm=songForm)
+
+
 @app.route("/<int:id>")
 def disconnect(id):
-  res = sC.disconnect(id)
+  res = fC.disconnectSat(id)
   if res:
     flash("Succefully disconnected")
   else:
@@ -48,29 +51,59 @@ def disconnect(id):
 
 @app.route("/connectCC", methods=['POST'])
 def connectCC():
-  ccForm  = f.ConnectCC()
-  s = Satellite.query.all()
-  form = f.ConnectForm()
-  lightForm = f.ConnectLight()
-
+  form = f.ConnectCC()
+  formValidate = f.ConnectCCValidate() 
+ 
   if request.method == 'POST':
-    if request.form.get('name') == "" or ccForm.room is None:
+    if formValidate.validate() == False:
       flash('All fields are required')
-      return render_template('info.html', sats=s, form=form, ccForm=ccForm)
+      return redirect(url_for('main'))
     else:
       res = fC.connectLight(request)
       if res:
         flash("Success")
       else:
         flash("Fail")
-      return render_template('info.html',sats=s, form=form, ccForm=ccForm)
+      return redirect(url_for('main'))
   else:
-    return render_template('info.html',sats=s, form=form, ccForm=ccForm)
-
-@app.route("/connectLight", methods=['POST'])
-def connectLight():
-  form = f.ConnectLight()
-  formValidate = f.ConnectLightValidate()
+      return redirect(url_for('main'))
+    
+@app.route("/connectSong", methods=['POST'])
+def connectSong():
+  form = f.ConnectSong()
+  if request.method == 'POST':
+    if form.validate() == False:
+      flash('All fields are required')
+      return redirect(url_for('main'))
+    else:
+      res = fC.connectSong(request)
+      if res:
+        flash("Success")
+      else:
+        flash("Fail")
+      return redirect(url_for('main'))
+  else:
+      return redirect(url_for('main'))
+    
+@app.route("/connectMobile", methods=['POST'])
+def connectMobile():
+  form = f.ConnectMobile()
+  if request.method == 'POST':
+    if form.validate() == False:
+      flash('All fields are required')
+      return redirect(url_for('main'))
+    else:
+      res = fC.connectMobile(request)
+      if res:
+        flash("Success")
+      else:
+        flash("Fail")
+      return redirect(url_for('main'))
+  else:
+      return redirect(url_for('main'))
+    
+  
+    
 
 
   if request.method == 'POST':
