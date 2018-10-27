@@ -27,26 +27,29 @@ def ShouldLightsTurnOn():
     sunset = sun['sunset'].timestamp() 
     isNight = timeNow >= sunset or timeNow <= sunrise
     print(isNight)
-    return ambientBrightness < AMBIENT_BRIGHTNESS_THRESHOLD and not isNight
+    return ambientBrightness < AMBIENT_BRIGHTNESS_THRESHOLD and isNight
 
 def GetLights():
   lights = requests.get(address).json()
+  print(type(lights))
+  
   return [(lId, l['name']) for lId,l in lights.items()]
-
-def GetLightName(id):
-  lights = requests.get(address).json()
-  return [l['name'] for lId,l in lights.items() if lId == id]
-
+  
 def UpdateLight(nmbr, putData):
     r = requests.put(address + str(nmbr) + "/state" , data = putData)
 
+def ToggleLight(nmbr):
+    lights = db.session.query(Light).filter(Light.roomId == nmbr).all()
+    if lights is None:
+        return
+    light = requests.get(address).json()['on']
 
 def UpdateLights(roomIds, putData):
   lights = db.session.query(Light).all()
 
   for light in lights:
     if any(roomId for roomId in roomIds if roomId == light.roomId):
-      UpdateLight(light.uuid, putData)
+      UpdateLight(light.id, putData)
 
 
 def ChangeRoom(roomIds):
@@ -57,9 +60,9 @@ def ChangeRoom(roomIds):
 
     for light in lights:
       if any(roomId for roomId in roomIds if roomId == light.roomId) and ShouldLightsTurnOn():
-        UpdateLight(light.uuid, on)
+        UpdateLight(light.id, on)
       else:
-        UpdateLight(light.uuid, off)
+        UpdateLight(light.id, off)
   
 
 '''

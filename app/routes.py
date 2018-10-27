@@ -28,7 +28,8 @@ def main():
   songForm = f.ConnectSong()
   roomForm = f.ConnectRoom()
   r = Room.query.all()
-  return render_template('info.html',rooms=r, form=form, ccForm=ccForm, mobileForm=mobileForm, lightForm=lightForm, songForm=songForm,roomForm=roomForm)
+  songs = Song.query.all()
+  return render_template('info.html',rooms=r, form=form, songs=songs, ccForm=ccForm, mobileForm=mobileForm, lightForm=lightForm, songForm=songForm,roomForm=roomForm)
 
 
 @app.route("/<int:id>")
@@ -91,7 +92,7 @@ def connectLight():
       flash('All fields are required')
       return redirect(url_for('main'))
     else:
-      res = fC.connectLight(request, lC.GetLightName(request.form.get('name')))
+      res = fC.connectLight(request)
       if res:
         flash("Success")
       else:
@@ -159,6 +160,9 @@ def home():
 def updateLight(number):
     lC.UpdateLight(number, request.data)
 
+@app.route("/lights/toggle/<int:number>", methods=['POST'])
+def toogleLight(number):
+    lC.toggleLights(number)
 
 @app.route("/h")
 def h():
@@ -203,19 +207,6 @@ def getMac():
   dict_list = [row2dict(m) for m in macs]
   return flask.jsonify({"devices" : dict_list})
 
-@app.route("/music")
-def music():
-  form = f.ConnectSatellite()
-  ccForm = f.ConnectCC()
-  ccForm.room.choices = f.GetRooms()
-  mobileForm = f.ConnectMobile()
-  lightForm = f.ConnectLight()
-  lightForm.room.choices = f.GetRooms()
-  songForm = f.ConnectSong()
-  roomForm = f.ConnectRoom()
-  songs = Song.query.all()
-  return render_template('songs.html',songs=songs, form=form, ccForm=ccForm, mobileForm=mobileForm, lightForm=lightForm, songForm=songForm,roomForm=roomForm)
-
 
 @app.route("/music/play/<int:songId>", methods=['GET'])
 def play(songId):
@@ -225,7 +216,7 @@ def play(songId):
     songUrl = songC.GetSongUrl(songId)
     ccC.PlaySong(roomIds, songUrl)
     flash("Song is now playing")
-    return redirect(url_for('music'))
+    return redirect(url_for('main'))
 
 @app.route("/music/stop", methods=['GET'])
 def stop():
