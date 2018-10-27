@@ -12,6 +12,7 @@ MUSIC_START_TIME = 0
 
 def determineRoom():
   roomIds = GetCurrentRoomIds()
+  print(roomIds)
   ccC.ChangeRoom(roomIds)
   lc.ChangeRoom(roomIds)
 

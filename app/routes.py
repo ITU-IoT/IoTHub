@@ -72,7 +72,7 @@ def connectCC():
       flash('All fields are required')
       return redirect(url_for('main'))
     else:
-      res = fC.connectCC(request)
+      res = fC.connectLight(request)
       if res:
         flash("Success")
       else:
@@ -203,11 +203,19 @@ def getMac():
   dict_list = [row2dict(m) for m in macs]
   return flask.jsonify({"devices" : dict_list})
 
-@app.route("/new")
-def new():
-  deviceForm = f.ConnectForm()
+@app.route("/songs")
+def songs():
+  form = f.ConnectSatellite()
+  ccForm = f.ConnectCC()
+  ccForm.room.choices = f.GetRooms()
+  mobileForm = f.ConnectMobile()
+  lightForm = f.ConnectLight()
+  lightForm.room.choices = f.GetRooms()
+  songForm = f.ConnectSong()
+  roomForm = f.ConnectRoom()
   songs = Song.query.all()
-  return render_template('songs.html',form=deviceForm, songs=songs)
+  return render_template('songs.html',songs=songs, form=form, ccForm=ccForm, mobileForm=mobileForm, lightForm=lightForm, songForm=songForm,roomForm=roomForm)
+
 
 @app.route("/play/<int:songId>", methods=['GET'])
 def play(songId):
@@ -222,11 +230,10 @@ def play(songId):
 
 @app.route("/music/pause", methods=['GET'])
 def pause():
-    deviceForm = f.ConnectForm()
     songs = Song.query.all()
     ccC.PauseCCs()
     flash("Song is now paused")
-    return render_template('songs.html',form=deviceForm, songs=songs)
+    return redirect(url_for('main'))
 
 @app.route("/music/volume/<int:roomId>/<int:volume>", methods=['POST'])
 def volume(roomId, volume):
