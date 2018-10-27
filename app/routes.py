@@ -35,8 +35,6 @@ def main():
       return render_template('info.html',sats=s, form=form, ccForm=ccForm)
   else:
     return render_template('info.html',sats=s, form=form, ccForm=ccForm, lightForm=lightForm)
-
-
 @app.route("/<int:id>")
 def disconnect(id):
   res = sC.disconnect(id)
@@ -70,10 +68,10 @@ def connectCC():
     return render_template('info.html',sats=s, form=form, ccForm=ccForm)
 
 @app.route("/connectLight", methods=['POST'])
-def connectCC():
-  ccForm  = f.ConnectCC()
-  s = Satellite.query.all()
-  form = f.ConnectForm()
+def connectLight():
+  form = f.ConnectLight()
+  formValidate = f.ConnectLightValidate()
+
 
   if request.method == 'POST':
     if request.form.get('name') == "" or ccForm.room is None:
@@ -91,10 +89,7 @@ def connectCC():
   
 @app.route("/home")
 def home():
-  form = f.ConnectForm()
-  ccForm = f.ConnectCC()
-  r = Room.query.all()
-  return render_template("rooms.html", form=form, ccForm=ccForm, rooms=r)
+  return render_template("front.html")
 
 @app.route("/lights/<int:number>", methods=['PUT'])
 def updateLight(number):
@@ -169,11 +164,6 @@ def pause():
     flash("Song is now paused")
     return render_template('songs.html',form=deviceForm, songs=songs)
 
-@app.route("/music/volume/<int:roomId>/<int:volume>", methods=['POST'])
-def volume(roomId, volume):
-    room = Rooms.query.filter(Room.id == roomId).filter()
-    room.volume = volume
-    db.session.commit()
 
 def connectPOST(request):
     if not request.json:
