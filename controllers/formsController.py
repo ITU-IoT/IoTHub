@@ -1,11 +1,11 @@
 from app import db
-from app.models import Satellite
+from app.models import Satellite,CC
 from flask import request
 
 from forms import forms as f
 
 
-def connect(request):
+def connectSat(request):
   name = request.form.get("name")
   ip = request.form.get("ip")
   port = request.form.get("port")
@@ -18,7 +18,7 @@ def connect(request):
   return False
 
 
-def disconnect(id):
+def disconnectSat(id):
   try:
       sat = Satellite.query.get(id)
       db.session.delete(sat)
@@ -26,3 +26,17 @@ def disconnect(id):
       return True
   except:
       return False
+
+def connectCC(request):
+  name = request.form.get('name')
+  roomId = request.form.get('room') 
+  print(type(roomId))
+  cc = CC.query.filter(CC.name == name).filter(CC.roomId == roomId)
+  print(cc)
+  if not cc.first():
+    cc = CC(name=name, roomId=roomId)
+    db.session.add(cc)
+    db.session.commit()
+    return True
+  return False
+  

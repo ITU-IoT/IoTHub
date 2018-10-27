@@ -6,12 +6,12 @@ from app.models import Room
 
 
 def GetRooms():
-  rooms = db.session.query(Room.name).all()
+  rooms = db.session.query(Room.name,Room.id).all()
   print(rooms)
   print(type(rooms))
   roomNames = []
   for room in rooms:
-    roomNames.append((room[0],room[0]))
+    roomNames.append((room[1],room[0]))
   return roomNames
 
 

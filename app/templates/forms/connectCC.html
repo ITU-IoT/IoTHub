@@ -1,7 +1,7 @@
 {% block connectCCForm %}
 
 <div class="container">
-    <form action="/" method="POST">
+    <form action="/connectCC" method="POST">
       {{ ccForm.hidden_tag() }}
      
       <div class="row">
@@ -11,20 +11,9 @@
         </div>
         <div class="form-group col-6">
           {{ccForm.room.label}}
-          <select name="" id="" class="form-control">
-            {% for subfield in ccForm.room %}
-              {{ subfield.label }}
-              {{ subfield }}
-              <!-- <option value="{{ subfield }}">{{ subfield }}</option> -->
-            {% endfor %}
-          </select>
-        </div>
-<!-- 
-        <div class="form-group col-6">
-          {{ ccForm.room.label }}
-          {{ ccForm.room(class="form-control", autocomplete="off")}}
-        </div> -->
-        
+          {{ ccForm.room(class="form-control") }}
+          
+        </div>        
         <div class="form-group col-12">
           {{ ccForm.submit(class="btn btn-primary col-12") }}
         </div>
