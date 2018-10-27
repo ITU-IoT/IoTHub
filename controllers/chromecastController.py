@@ -15,7 +15,14 @@ def StopCCs():
     mc = chromecast.media_controller
     mc.stop()
     
+def PauseCCs():
+  chromecasts = db.session.query(CC).all()
 
+  for ccast in chromecasts:
+    chromecast = GetChromecast(ccast.name)
+    mc = chromecast.media_controller
+    mc.pause()
+    
  
 
 def PlaySong(roomIds,song, songTime=0):

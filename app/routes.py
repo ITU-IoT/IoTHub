@@ -92,6 +92,7 @@ def light():
 
     print("Received light sensor value: ")
     print(json['value'])
+    lC.SetAmbientBrightness(json['value'])
     
     return("")
 
@@ -116,11 +117,8 @@ def beacon():
 
 @app.route("/sensor/beacon/device", methods=['GET'])
 def getMac():
-  print("getting devices")
   macs = Mobile.query.all()
-  print("creating list of devices")
   dict_list = [row2dict(m) for m in macs]
-  print("returning devices")
   return flask.jsonify({"devices" : dict_list})
 
 @app.route("/new")
@@ -129,16 +127,25 @@ def new():
   songs = Song.query.all()
   return render_template('songs.html',form=deviceForm, songs=songs)
 
-@app.route("/play/<int:id>", methods=['GET'])
-def play(id):
+@app.route("/play/<int:songId>", methods=['GET'])
+def play(songId):
     deviceForm = f.ConnectForm()
     songs = Song.query.all()
     ccC.StopCCs()
     roomIds = locC.GetCurrentRoomIds()
-    songUrl = songC.GetSongUrl(id)
+    songUrl = songC.GetSongUrl(songId)
     ccC.PlaySong(roomIds, songUrl)
     flash("Song is now playing")
     return render_template('songs.html',form=deviceForm, songs=songs)
+
+@app.route("/music/pause", methods=['GET'])
+def pause():
+    deviceForm = f.ConnectForm()
+    songs = Song.query.all()
+    ccC.PauseCCs()
+    flash("Song is now paused")
+    return render_template('songs.html',form=deviceForm, songs=songs)
+
 
 def connectPOST(request):
     if not request.json:

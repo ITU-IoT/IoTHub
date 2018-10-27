@@ -2,6 +2,7 @@ import math
 from app.models import CurrentSignals, Mobile, Room, CC,Satellite
 from app import db
 from controllers import chromecastController as ccC
+from controllers import lightsController as lc
 from sqlalchemy import func
 import collections
 from datetime import datetime
@@ -12,7 +13,7 @@ MUSIC_START_TIME = 0
 def determineRoom():
   roomIds = GetCurrentRoomIds()
   ccC.ChangeRoom(roomIds)
-
+  lc.ChangeRoom(roomIds)
 
 
 def UpdateLocationData(json):
