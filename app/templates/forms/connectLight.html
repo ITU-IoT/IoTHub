@@ -1,0 +1,24 @@
+{% block connectLightForm %}
+
+<div class="container">
+    <form action="/connectLight" method="POST">
+      {{ lightForm.hidden_tag() }}
+     
+      <div class="row">
+        <div class="form-group col-6">
+          {{ lightForm.name.label }}
+          {{ lightForm.name(class="form-control") }}
+        </div>
+        <div class="form-group col-6">
+          {{lightForm.room.label }}
+          {{lightForm.room(class="form-control") }}
+          
+        </div>        
+        <div class="form-group col-12">
+          {{lightForm.submit(class="btn btn-primary col-12") }}
+        </div>
+      </div>
+    </form>
+  </div>
+
+{% endblock %}

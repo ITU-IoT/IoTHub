@@ -15,9 +15,11 @@ import time
 
 @app.route("/", methods=['POST','GET'])
 def main():
+  lC.GetLights()
   form = f.ConnectForm()
   ccForm = f.ConnectCC()
   s = Satellite.query.all()
+  lightForm = f.ConnectLight()
 
   if request.method == 'POST':
     if form.validate() == False:
@@ -32,7 +34,7 @@ def main():
       s = Satellite.query.all()
       return render_template('info.html',sats=s, form=form, ccForm=ccForm)
   else:
-    return render_template('info.html',sats=s, form=form, ccForm=ccForm)
+    return render_template('info.html',sats=s, form=form, ccForm=ccForm, lightForm=lightForm)
 
 @app.route("/<int:id>")
 def disconnect(id):
@@ -46,6 +48,27 @@ def disconnect(id):
   return render_template("info.html", sats=s, form=form)
 
 @app.route("/connectCC", methods=['POST'])
+def connectCC():
+  ccForm  = f.ConnectCC()
+  s = Satellite.query.all()
+  form = f.ConnectForm()
+  lightForm = f.ConnectLight()
+
+  if request.method == 'POST':
+    if request.form.get('name') == "" or ccForm.room is None:
+      flash('All fields are required')
+      return render_template('info.html', sats=s, form=form, ccForm=ccForm)
+    else:
+      res = fC.connectLight(request)
+      if res:
+        flash("Success")
+      else:
+        flash("Fail")
+      return render_template('info.html',sats=s, form=form, ccForm=ccForm)
+  else:
+    return render_template('info.html',sats=s, form=form, ccForm=ccForm)
+
+@app.route("/connectLight", methods=['POST'])
 def connectCC():
   ccForm  = f.ConnectCC()
   s = Satellite.query.all()
@@ -64,11 +87,7 @@ def connectCC():
       return render_template('info.html',sats=s, form=form, ccForm=ccForm)
   else:
     return render_template('info.html',sats=s, form=form, ccForm=ccForm)
-    
   
-    
-
-
 @app.route("/home")
 def home():
   return render_template("front.html")

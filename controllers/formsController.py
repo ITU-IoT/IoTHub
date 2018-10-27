@@ -40,3 +40,14 @@ def connectCC(request):
     return True
   return False
   
+def connectLight(request):
+  name = request.form.get('name')
+  roomId = request.form.get('room') 
+  cc = Light.query.filter(CC.name == name).filter(CC.roomId == roomId)
+  print(cc)
+  if not cc.first():
+    light = Light(name=name, roomId=roomId)
+    db.session.add(cc)
+    db.session.commit()
+    return True
+  return False

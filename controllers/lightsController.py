@@ -32,6 +32,12 @@ def ShouldLightsTurnOn():
     print("is it night? ", isNight)
     return ambientBrightness < AMBIENT_BRIGHTNESS_THRESHOLD and not isNight
 
+def GetLights():
+  lights = requests.get(address).json()
+  print(type(lights))
+  
+  return [(lId, l['name']) for lId,l in lights.items()]
+  
 def UpdateLight(nmbr, putData):
     r = requests.put(address + str(nmbr) + "/state" , data = putData)
 
