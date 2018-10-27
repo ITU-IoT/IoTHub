@@ -1,5 +1,5 @@
 from app import db
-from app.models import Satellite,CC
+from app.models import Satellite,CC,Mobile,Song
 from flask import request
 
 from forms import forms as f
@@ -36,6 +36,30 @@ def connectCC(request):
   if not cc.first():
     cc = CC(name=name, roomId=roomId)
     db.session.add(cc)
+    db.session.commit()
+    return True
+  return False
+  
+def connectMobile(request):
+  name = request.form.get('name')
+  mac = request.form.get('mac') 
+  mobile = Mobile.query.filter(Mobile.name == name).filter(Mobile.mac == mac)
+  if not mobile.first():
+    m = Mobile(name=name, mac=mac)
+    db.session.add(m)
+    db.session.commit()
+    return True
+  return False
+  
+
+def connectSong(request):
+  title = request.form.get('title')
+  artist = request.form.get('artist') 
+  link = request.form.get('link') 
+  song = Song.query.filter(Song.title == title).filter(Song.artist == artist).filter(Song.link == link)
+  if not song.first():
+    s = Song(title=title, artist=artist, link=link)
+    db.session.add(s)
     db.session.commit()
     return True
   return False

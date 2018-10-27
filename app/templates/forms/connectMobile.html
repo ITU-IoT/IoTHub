@@ -1,0 +1,24 @@
+{% block connectMobileForm %}
+
+<div class="container">
+    <form action="/connectMobile" method="POST">
+      {{ mobileForm.hidden_tag() }}
+     
+      <div class="row">
+        <div class="form-group col-6">
+          {{ mobileForm.name.label }}
+          {{ mobileForm.name(class="form-control", placeholder="Name",autocomplete="off")}}
+        </div>
+        <div class="form-group col-6">
+          {{ mobileForm.mac.label }}
+          {{ mobileForm.mac(class="form-control", placeholder="MAC", autocomplete="off") }}
+          
+        </div>        
+        <div class="form-group col-12">
+          {{ mobileForm.submit(class="btn btn-primary col-12") }}
+        </div>
+      </div>
+    </form>
+  </div>
+
+{% endblock %}

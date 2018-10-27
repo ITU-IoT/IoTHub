@@ -1,0 +1,29 @@
+{% block connectSongForm %}
+
+<div class="container">
+    <form action="/connectSong" method="POST">
+      {{ songForm.hidden_tag() }}
+     
+      <div class="row">
+        <div class="form-group col-6">
+          {{ songForm.title.label }}
+          {{ songForm.title(class="form-control", placeholder="Name",autocomplete="off")}}
+        </div>
+        <div class="form-group col-6">
+          {{ songForm.artist.label }}
+          {{ songForm.artist(class="form-control", placeholder="Artist", autocomplete="off") }}
+          
+        </div>  
+        <div class="form-group col-6">
+          {{ songForm.link.label }}
+          {{ songForm.link(class="form-control", placeholder="Link", autocomplete="off") }}
+          
+        </div>        
+        <div class="form-group col-12">
+          {{ songForm.submit(class="btn btn-primary col-12") }}
+        </div>
+      </div>
+    </form>
+  </div>
+
+{% endblock %}
