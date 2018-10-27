@@ -21,20 +21,7 @@ def main():
   songForm = f.ConnectSong()
   s = Satellite.query.all()
 
-  if request.method == 'POST':
-    if form.validate() == False:
-      flash('All fields are required.')
-      return render_template('info.html',sats=s, form=form, ccForm=ccForm)
-    else:
-      res = sC.connect(request)
-      if res:
-        flash("Success")
-      else:
-        flash("Fail")
-      s = Satellite.query.all()
-      return render_template('info.html',sats=s, form=form, ccForm=ccForm)
-  else:
-    return render_template('info.html',sats=s, form=form, ccForm=ccForm, mobileForm=mobileForm, songForm=songForm)
+  return render_template('info.html',sats=s, form=form, ccForm=ccForm, mobileForm=mobileForm, songForm=songForm)
 
 
 @app.route("/<int:id>")
@@ -47,6 +34,25 @@ def disconnect(id):
   s = Satellite.query.all()
   form = f.ConnectForm()
   return render_template("info.html", sats=s, form=form)
+
+@app.route("/connectSat", methods=['POST'])
+def connectSat():
+  form = f.ConnectSatellite()
+  formValidate = f.ConnectSatelliteValidate()
+
+  if request.method == 'POST':
+    if formValidate.validate() == False:
+      flash('All fields are required')
+      return redirect(url_for('main'))
+    else:
+      res = fC.connectSat(request)
+      if res:
+        flash("Success")
+      else:
+        flash("Fail")
+      return redirect(url_for('main'))
+  else:
+      return redirect(url_for('main'))
 
 @app.route("/connectCC", methods=['POST'])
 def connectCC():
