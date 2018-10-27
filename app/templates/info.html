@@ -5,19 +5,29 @@
   
   <div class="container">
     <div class="container">
-      <h1>All rooms</h1>
+      <h1>
+	All rooms
+        <a href="/music/stop" style="float: right;">
+         <button class="btn btn-danger">Stop music</button>
+	</a>
+      </h1>
       <hr>
       <div class="card-deck">
         {% for room in rooms %}
           <div class="card">
             <div class="card-body">
               <h5 class="card-title">{{ room.name}}</h5>
-
+	      {% if room.paused %}
+	      <a href="/music/pause/{{room.id}}/0">
+                <button class="btn btn-primary">
+	      {% else %}
+	      <a href="/music/pause/{{room.id}}/1">
                 <button class="btn btn-default">
+	      {% endif %}
                   <div class="room-mute">
                     Mute
                   </div>
-                </button>
+	        </button>
               </a>
 
               <a href="/lights/{{room.id}}">

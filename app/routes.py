@@ -227,12 +227,11 @@ def play(songId):
     flash("Song is now playing")
     return redirect(url_for('music'))
 
-@app.route("/music/pause", methods=['GET'])
-def pause():
+@app.route("/music/stop", methods=['GET'])
+def stop():
     songs = Song.query.all()
-    ccC.PauseCCs()
-    print("Pausing song")
-    flash("Song is now paused")
+    ccC.StopCCs()
+    flash("Song is now stopped")
     return redirect(url_for('main'))
 
 @app.route("/music/volume/<int:roomId>/<int:volume>", methods=['PUT'])
@@ -242,6 +241,15 @@ def volume(roomId, volume):
     db.session.commit()
     ccC.SetVolume(roomId, volume)
     return ''
+
+@app.route("/music/pause/<int:roomId>/<int:paused>", methods=['GET'])
+def pause(roomId, paused):
+    room = Room.query.filter(Room.id == roomId).first()
+    room.paused = paused
+    db.session.commit()
+    ccC.SetPaused(roomId, paused)
+    return redirect(url_for('main'))
+    
 
 def connectPOST(request):
     if not request.json:

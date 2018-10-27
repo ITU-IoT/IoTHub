@@ -26,6 +26,7 @@ def ShouldLightsTurnOn():
     sunrise = sun['dawn'].timestamp()
     sunset = sun['sunset'].timestamp() 
     isNight = timeNow >= sunset or timeNow <= sunrise
+    print(isNight)
     return ambientBrightness < AMBIENT_BRIGHTNESS_THRESHOLD and not isNight
 
 def GetLights():
