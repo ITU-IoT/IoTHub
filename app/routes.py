@@ -2,7 +2,7 @@ from flask import render_template,request,flash
 from app import app,db
 from controllers import postController as pC
 from controllers import lightsController as lC
-from controllers import satelliteController as sC
+from controllers import formsController as fC
 from controllers import locationController as locC
 from controllers import chromecastController as ccC
 from controllers import songController as songC
@@ -18,7 +18,6 @@ def main():
   form = f.ConnectForm()
   ccForm = f.ConnectCC()
   s = Satellite.query.all()
-
 
   if request.method == 'POST':
     if form.validate() == False:
@@ -46,8 +45,29 @@ def disconnect(id):
   form = f.ConnectForm()
   return render_template("info.html", sats=s, form=form)
 
-# @app.route("/status/<int:id>")
-# def status():  
+@app.route("/connectCC", methods=['POST'])
+def connectCC():
+  ccForm  = f.ConnectCC()
+  s = Satellite.query.all()
+  form = f.ConnectForm()
+
+  if request.method == 'POST':
+    if request.form.get('name') == "" or ccForm.room is None:
+      flash('All fields are required')
+      return render_template('info.html', sats=s, form=form, ccForm=ccForm)
+    else:
+      res = fC.connectCC(request)
+      if res:
+        flash("Success")
+      else:
+        flash("Fail")
+      return render_template('info.html',sats=s, form=form, ccForm=ccForm)
+  else:
+    return render_template('info.html',sats=s, form=form, ccForm=ccForm)
+    
+  
+    
+
 
 @app.route("/home")
 def home():
