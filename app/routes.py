@@ -2,7 +2,7 @@ from flask import render_template,request,flash,redirect,url_for
 from app import app,db
 from controllers import postController as pC
 from controllers import lightsController as lC
-from controllers import formsController as fC
+from controllers import satelliteController as sC
 from controllers import locationController as locC
 from controllers import chromecastController as ccC
 from controllers import songController as songC
@@ -20,22 +20,7 @@ def main():
   mobileForm = f.ConnectMobile()
   songForm = f.ConnectSong()
   s = Satellite.query.all()
-  lightForm = f.ConnectLight()
-
-  if request.method == 'POST':
-    if form.validate() == False:
-      flash('All fields are required.')
-      return render_template('info.html',sats=s, form=form, ccForm=ccForm)
-    else:
-      res = sC.connect(request)
-      if res:
-        flash("Success")
-      else:
-        flash("Fail")
-      s = Satellite.query.all()
-      return render_template('info.html',sats=s, form=form, ccForm=ccForm)
-  else:
-    return render_template('info.html',sats=s, form=form, ccForm=ccForm, mobileForm=mobileForm, lightForm=lightForm, songForm=songForm)
+  return render_template('info.html',sats=s, form=form, ccForm=ccForm, mobileForm=mobileForm, lightForm=lightForm, songForm=songForm)
 
 
 @app.route("/<int:id>")
@@ -48,6 +33,26 @@ def disconnect(id):
   s = Satellite.query.all()
   form = f.ConnectForm()
   return render_template("info.html", sats=s, form=form)
+
+
+@app.route("/connectSat", methods=['POST'])
+def connectSat():
+  form = f.ConnectSatellite()
+  formValidate = f.ConnectSatelliteValidate()
+
+  if request.method == 'POST':
+    if formValidate.validate() == False:
+      flash('All fields are required')
+      return redirect(url_for('main'))
+    else:
+      res = fC.connectSat(request)
+      if res:
+        flash("Success")
+      else:
+        flash("Fail")
+      return redirect(url_for('main'))
+  else:
+      return redirect(url_for('main'))
 
 @app.route("/connectCC", methods=['POST'])
 def connectCC():
@@ -120,7 +125,8 @@ def connectMobile():
       return redirect(url_for('main'))
   else:
       return redirect(url_for('main'))
-  
+    
+
 @app.route("/home")
 def home():
   return render_template("front.html")
@@ -198,6 +204,11 @@ def pause():
     flash("Song is now paused")
     return render_template('songs.html',form=deviceForm, songs=songs)
 
+@app.route("/music/volume/<int:roomId>/<int:volume>", methods=['POST'])
+def volume(roomId, volume):
+    room = Room.query.filter(Room.id == roomId).filter()
+    room.volume = volume
+    db.session.commit()
 
 def connectPOST(request):
     if not request.json:
