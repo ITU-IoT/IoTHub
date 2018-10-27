@@ -21,8 +21,10 @@ import time
 def main():
   form = f.ConnectSatellite()
   ccForm = f.ConnectCC()
+  ccForm.room.choices = f.GetRooms()
   mobileForm = f.ConnectMobile()
   lightForm = f.ConnectLight()
+  lightForm.room.choices = f.GetRooms()
   songForm = f.ConnectSong()
   roomForm = f.ConnectRoom()
   s = Satellite.query.all()
@@ -70,7 +72,7 @@ def connectCC():
       flash('All fields are required')
       return redirect(url_for('main'))
     else:
-      res = fC.connectLight(request)
+      res = fC.connectCC(request)
       if res:
         flash("Success")
       else:

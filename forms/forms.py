@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import TextField,IntegerField,validators,SubmitField,SelectField
-from controllers import locationController, lightsController
+from controllers import lightsController
 from app import db
 from app.models import Room
 
@@ -16,6 +16,7 @@ def GetRooms():
 
 def GetLights():
   lights = lightsController.GetLights()
+  print('i get lights')
   lightNames = []
   for lId,light in lights:
     lightNames.append((lId,light))
