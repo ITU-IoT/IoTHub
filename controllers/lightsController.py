@@ -34,10 +34,12 @@ def ShouldLightsTurnOn():
 
 def GetLights():
   lights = requests.get(address).json()
-  print(type(lights))
-  
   return [(lId, l['name']) for lId,l in lights.items()]
-  
+
+def GetLightName(id):
+  lights = requests.get(address).json()
+  return [l['name'] for lId,l in lights.items() if lId == id]
+
 def UpdateLight(nmbr, putData):
     r = requests.put(address + str(nmbr) + "/state" , data = putData)
 
@@ -47,7 +49,7 @@ def UpdateLights(roomIds, putData):
 
   for light in lights:
     if any(roomId for roomId in roomIds if roomId == light.roomId):
-      UpdateLight(light.id, putData)
+      UpdateLight(light.uuid, putData)
 
 
 def ChangeRoom(roomIds):
@@ -58,9 +60,9 @@ def ChangeRoom(roomIds):
 
     for light in lights:
       if any(roomId for roomId in roomIds if roomId == light.roomId) and ShouldLightsTurnOn():
-        UpdateLight(light.id, on)
+        UpdateLight(light.uuid, on)
       else:
-        UpdateLight(light.id, off)
+        UpdateLight(light.uuid, off)
   
 
 '''
