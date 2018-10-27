@@ -6,7 +6,7 @@ from controllers import satelliteController as sC
 from controllers import locationController as locC
 from controllers import chromecastController as ccC
 from controllers import songController as songC
-from app.models import Satellite, Mobile,Song
+from app.models import Satellite, Mobile,Song, Room
 import pychromecast
 import json
 import flask
@@ -35,6 +35,7 @@ def main():
   else:
     return render_template('info.html',sats=s, form=form, ccForm=ccForm)
 
+
 @app.route("/<int:id>")
 def disconnect(id):
   res = sC.disconnect(id)
@@ -51,7 +52,10 @@ def disconnect(id):
 
 @app.route("/home")
 def home():
-  return render_template("front.html")
+  form = f.ConnectForm()
+  ccForm = f.ConnectCC()
+  r = Room.query.all()
+  return render_template("rooms.html", form=form, ccForm=ccForm, rooms=r)
 
 @app.route("/lights/<int:number>", methods=['PUT'])
 def updateLight(number):
@@ -126,6 +130,11 @@ def pause():
     flash("Song is now paused")
     return render_template('songs.html',form=deviceForm, songs=songs)
 
+@app.route("/music/volume/<int:roomId>/<int:volume>", methods=['POST'])
+def volume(roomId, volume):
+    room = Rooms.query.filter(Room.id == roomId).filter()
+    room.volume = volume
+    db.session.commit()
 
 def connectPOST(request):
     if not request.json:

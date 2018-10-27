@@ -1,6 +1,8 @@
-var slider = document.getElementById("myRange");
-
-// Update the current slider value (each time you drag the slider handle)
-slider.oninput = function() {
-  console.log(slider.value);
+var roomSliderTimeouts = [];
+function onSliderChange(value, roomId) {
+  clearTimeout(roomSliderTimeouts[roomId]);
+  roomSliderTimeouts[roomId] = setTimeout(function() {
+  	console.log(value, roomId, $);
+	$.post("/music/volume/"+roomId+"/"+value);
+  }, 500);
 }
