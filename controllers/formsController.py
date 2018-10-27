@@ -43,15 +43,15 @@ def connectCC(request):
 def connectLight(request):
   name = request.form.get('name')
   roomId = request.form.get('room') 
-  cc = Light.query.filter(CC.name == name).filter(CC.roomId == roomId)
+  existingLight = Light.query.filter(Light.name == name).filter(Light.uuid == roomId)
   print(cc)
-  if not cc.first():
+  if not existingLight.first():
     light = Light(name=name, roomId=roomId)
     db.session.add(cc)
     db.session.commit()
     return True
   return False
-  
+
 def connectMobile(request):
   name = request.form.get('name')
   mac = request.form.get('mac') 

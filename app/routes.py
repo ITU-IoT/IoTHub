@@ -35,7 +35,7 @@ def main():
       s = Satellite.query.all()
       return render_template('info.html',sats=s, form=form, ccForm=ccForm)
   else:
-    return render_template('info.html',sats=s, form=form, ccForm=ccForm, mobileForm=mobileForm, songForm=songForm)
+    return render_template('info.html',sats=s, form=form, ccForm=ccForm, mobileForm=mobileForm, lightForm=lightForm, songForm=songForm)
 
 
 @app.route("/<int:id>")
@@ -67,7 +67,26 @@ def connectCC():
       return redirect(url_for('main'))
   else:
       return redirect(url_for('main'))
-    
+
+@app.route("/connectLight", methods=['POST'])
+def connectLight():
+  form = f.ConnectLight()
+  formValidate = f.ConnectLightValidate() 
+ 
+  if request.method == 'POST':
+    if formValidate.validate() == False:
+      flash('All fields are required')
+      return redirect(url_for('main'))
+    else:
+      res = fC.connectLight(request)
+      if res:
+        flash("Success")
+      else:
+        flash("Fail")
+      return redirect(url_for('main'))
+  else:
+      return redirect(url_for('main'))
+
 @app.route("/connectSong", methods=['POST'])
 def connectSong():
   form = f.ConnectSong()
@@ -101,24 +120,6 @@ def connectMobile():
       return redirect(url_for('main'))
   else:
       return redirect(url_for('main'))
-    
-  
-    
-
-
-  if request.method == 'POST':
-    if request.form.get('name') == "" or ccForm.room is None:
-      flash('All fields are required')
-      return render_template('info.html', sats=s, form=form, ccForm=ccForm)
-    else:
-      res = fC.connectCC(request)
-      if res:
-        flash("Success")
-      else:
-        flash("Fail")
-      return render_template('info.html',sats=s, form=form, ccForm=ccForm)
-  else:
-    return render_template('info.html',sats=s, form=form, ccForm=ccForm)
   
 @app.route("/home")
 def home():
