@@ -1,11 +1,20 @@
 import json
 import requests
 from app.models import Room,Light
+from astral import Astral
 from app import db
 from datetime import datetime, time
 
 address = "http://192.168.1.2/api/egZDzxX7ctoCDoXLKTxAPom6-a29XpVoQw1UvGpu/lights/"
 ambientBrightness = 1000 #is a value between 0 and 1024
+
+print("BA")
+CITY_NAME = 'Copenhagen'
+a = Astral()
+a.solar_depression = 'civil'
+CITY = a[CITY_NAME]
+
+print('AA')
 
 AMBIENT_BRIGHTNESS_THRESHOLD = 200
 
@@ -15,9 +24,13 @@ def SetAmbientBrightness(value):
 
 def ShouldLightsTurnOn():
     global ambientBrightness
-    #timeNow = datetime.now().time()
-    #isNight = timeNow >= time(16,00) or timeNow <= time(8,00)
-    return ambientBrightness < AMBIENT_BRIGHTNESS_THRESHOLD # and isNight
+    timeNow = datetime.now().timestamp()
+    sun = CITY.sun(date = datetime.now(), local = True)
+    sunrise = sun['dawn'].timestamp()
+    sunset = sun['sunset'].timestamp() 
+    isNight = timeNow >= sunset or timeNow <= sunrise
+    print("is it night? ", isNight)
+    return ambientBrightness < AMBIENT_BRIGHTNESS_THRESHOLD and not isNight
 
 def UpdateLight(nmbr, putData):
     r = requests.put(address + str(nmbr) + "/state" , data = putData)

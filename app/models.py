@@ -5,7 +5,8 @@ from app import db
 class Room(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   name = db.Column(db.String(64))
-
+  paused = db.Column(db.Boolean)
+  volume = db.Column(db.Integer)
 
 class CurrentSignals(db.Model):
   id = db.Column(db.Integer, primary_key=True)
