@@ -4,9 +4,8 @@ function onSliderChange(value, roomId) {
   roomSliderTimeouts[roomId] = setTimeout(function() {
   	console.log(value, roomId, $);
 	$.ajax({
-		type: 'POST',
-		url: "/music/volume/"+roomId+"/"+value,
-		success: function() {console.log("posted successfully")}
-	})
-  }, 500);
+		type: 'PUT',
+		url: "/music/volume/"+roomId+"/"+value
+	});
+  }, 300);
 }

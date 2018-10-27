@@ -8,13 +8,10 @@ from datetime import datetime, time
 address = "http://192.168.1.2/api/egZDzxX7ctoCDoXLKTxAPom6-a29XpVoQw1UvGpu/lights/"
 ambientBrightness = 1000 #is a value between 0 and 1024
 
-print("BA")
 CITY_NAME = 'Copenhagen'
 a = Astral()
 a.solar_depression = 'civil'
 CITY = a[CITY_NAME]
-
-print('AA')
 
 AMBIENT_BRIGHTNESS_THRESHOLD = 200
 
@@ -29,7 +26,6 @@ def ShouldLightsTurnOn():
     sunrise = sun['dawn'].timestamp()
     sunset = sun['sunset'].timestamp() 
     isNight = timeNow >= sunset or timeNow <= sunrise
-    print("is it night? ", isNight)
     return ambientBrightness < AMBIENT_BRIGHTNESS_THRESHOLD and not isNight
 
 def GetLights():
