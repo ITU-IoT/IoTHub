@@ -2,7 +2,7 @@ from flask import render_template,request,flash,redirect,url_for
 from app import app,db
 from controllers import postController as pC
 from controllers import lightsController as lC
-from controllers import satelliteController as sC
+from controllers import formsController as fC
 from controllers import locationController as locC
 from controllers import chromecastController as ccC
 from controllers import songController as songC
@@ -13,14 +13,20 @@ import flask
 from forms import forms as f
 import time
 
+# @app.route("/", methods=['POST','GET'])
+# def notmain():
+#   return "work ples"
+
 @app.route("/", methods=['POST','GET'])
 def main():
   form = f.ConnectSatellite()
   ccForm = f.ConnectCC()
   mobileForm = f.ConnectMobile()
+  lightForm = f.ConnectLight()
   songForm = f.ConnectSong()
+  roomForm = f.ConnectRoom()
   s = Satellite.query.all()
-  return render_template('info.html',sats=s, form=form, ccForm=ccForm, mobileForm=mobileForm, lightForm=lightForm, songForm=songForm)
+  return render_template('info.html',sats=s, form=form, ccForm=ccForm, mobileForm=mobileForm, lightForm=lightForm, songForm=songForm,roomForm=roomForm)
 
 
 @app.route("/<int:id>")
@@ -125,7 +131,23 @@ def connectMobile():
       return redirect(url_for('main'))
   else:
       return redirect(url_for('main'))
-    
+        
+@app.route("/connectRoom", methods=['POST'])
+def connectRoom():
+  form = f.ConnectMobile()
+  if request.method == 'POST':
+    if form.validate() == False:
+      flash('All fields are required')
+      return redirect(url_for('main'))
+    else:
+      res = fC.connectRoom(request)
+      if res:
+        flash("Success")
+      else:
+        flash("Fail")
+      return redirect(url_for('main'))
+  else:
+      return redirect(url_for('main'))
 
 @app.route("/home")
 def home():

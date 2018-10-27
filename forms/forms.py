@@ -68,3 +68,7 @@ class ConnectMobile(FlaskForm):
   name = TextField("Name") 
   mac = TextField("MAC")
   submit = SubmitField("Add device")
+
+class ConnectRoom(FlaskForm):
+  name = TextField("Name")
+  submit = SubmitField("Add Room")

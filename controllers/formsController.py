@@ -1,5 +1,5 @@
 from app import db
-from app.models import Satellite,CC,Mobile,Song
+from app.models import Satellite,CC,Mobile,Song,Room,Light
 from flask import request
 
 from forms import forms as f
@@ -76,3 +76,12 @@ def connectSong(request):
     return True
   return False
   
+def connectRoom(request):
+  name = request.form.get('name')
+  room = Room.query.filter(Room.name == name)
+  if not room.first():
+    r = Room(name=name)
+    db.session.add(r)
+    db.session.commit()
+    return True
+  return False

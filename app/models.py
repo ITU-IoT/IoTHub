@@ -8,6 +8,13 @@ class Room(db.Model):
   paused = db.Column(db.Integer, default=0)
   volume = db.Column(db.Integer, default=50)
 
+
+class Mobile(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64))
+    mac = db.Column(db.String(64))
+
+
 class CurrentSignals(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   mobileId = db.Column(db.Integer, ForeignKey('mobile.id'))
@@ -32,11 +39,6 @@ class CC(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64))
     roomId = db.Column(db.Integer, ForeignKey('room.id'))    
-
-class Mobile(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64))
-    mac = db.Column(db.String(64))
 
 class Light(db.Model):
     id = db.Column(db.Integer, primary_key=True)
