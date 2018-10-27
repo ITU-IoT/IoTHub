@@ -5,8 +5,8 @@ from app import db
 class Room(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   name = db.Column(db.String(64))
-  paused = db.Column(db.Boolean)
-  volume = db.Column(db.Integer)
+  paused = db.Column(db.Integer, default=0)
+  volume = db.Column(db.Integer, default=50)
 
 class CurrentSignals(db.Model):
   id = db.Column(db.Integer, primary_key=True)
@@ -41,7 +41,11 @@ class Mobile(db.Model):
 class Light(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64))
-    roomId = db.Column(db.Integer, ForeignKey('room.id')) 
+    roomId = db.Column(db.Integer, ForeignKey('room.id'))
+    uuid = db.Column(db.Integer)
+    brightness = db.Column(db.Integer, default=254)
+    hue = db.Column(db.Integer, default=65535)
+    saturation = db.Column(db.Integer, default=0)
 
 # '''
 # Room model:
