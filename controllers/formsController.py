@@ -40,14 +40,16 @@ def connectCC(request):
     return True
   return False
   
-def connectLight(request):
-  name = request.form.get('name')
-  roomId = request.form.get('room') 
-  existingLight = Light.query.filter(Light.name == name).filter(Light.uuid == roomId)
-  print(cc)
+def connectLight(request, name):
+  print("name    ", name[0])
+  
+  lightId = request.form.get('name')
+  roomId = request.form.get('room')
+  print("light id    ", lightId, "   roomId ", roomId)
+  existingLight = Light.query.filter(str(Light.uuid) == lightId)
   if not existingLight.first():
-    light = Light(name=name, roomId=roomId)
-    db.session.add(cc)
+    light = Light(name=name[0], uuid = lightId, roomId=roomId)
+    db.session.add(light)
     db.session.commit()
     return True
   return False

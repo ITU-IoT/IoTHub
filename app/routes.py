@@ -91,7 +91,7 @@ def connectLight():
       flash('All fields are required')
       return redirect(url_for('main'))
     else:
-      res = fC.connectLight(request)
+      res = fC.connectLight(request, lC.GetLightName(request.form.get('name')))
       if res:
         flash("Success")
       else:
