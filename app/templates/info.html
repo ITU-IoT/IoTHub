@@ -5,19 +5,14 @@
   
   <div class="container">
     <div class="container">
-      <h1>All devices</h1>
+      <h1>All rooms</h1>
       <hr>
       <div class="card-deck">
-        {% for sat in sats %}
+        {% for room in rooms %}
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">{{ sat.name}}</h5>
-              <p class="card-text"> 
-                {{ sat.ip}} : {{ sat.port }}  
-              </p>
-              
-              <a href="/{{sat.id}}"><button class="btn btn-primary">Disconnect</button></a>
-              <a href="/mute/{{sat.id}}"> 
+              <h5 class="card-title">{{ room.name}}</h5>
+
                 <button class="btn btn-default">
                   <div class="room-mute">
                     Mute
@@ -25,12 +20,17 @@
                 </button>
               </a>
 
-              <a href="/lights/{{sat.id}}">
+              <a href="/lights/{{room.id}}">
                 <button class="btn btn-default">
                   <div class="room-lights">Lights ON</div>
                 </button>
               </a>
-              
+              <div class="container">
+	        <div class="slidecontainer">
+	          <input type="range" min="0" max="100" value="{{room.volume}}" class="slider" id="myRange" onchange="onSliderChange(this.value, {{room.id}})">
+	        </div>  
+             </div>
+
                 
             </div>  
           </div>
@@ -38,8 +38,5 @@
         </div>
     </div>
   </div>
-
-
-  {% include 'slider.html' %}
 
 {% endblock %}

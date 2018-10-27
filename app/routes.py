@@ -27,8 +27,8 @@ def main():
   lightForm.room.choices = f.GetRooms()
   songForm = f.ConnectSong()
   roomForm = f.ConnectRoom()
-  s = Satellite.query.all()
-  return render_template('info.html',sats=s, form=form, ccForm=ccForm, mobileForm=mobileForm, lightForm=lightForm, songForm=songForm,roomForm=roomForm)
+  r = Room.query.all()
+  return render_template('info.html',rooms=r, form=form, ccForm=ccForm, mobileForm=mobileForm, lightForm=lightForm, songForm=songForm,roomForm=roomForm)
 
 
 @app.route("/<int:id>")
@@ -38,9 +38,9 @@ def disconnect(id):
     flash("Succefully disconnected")
   else:
     flash("Something went wrong, trying updating site!")
-  s = Satellite.query.all()
+  r = Room.query.all()
   form = f.ConnectForm()
-  return render_template("info.html", sats=s, form=form)
+  return render_template("info.html", rooms=r, form=form)
 
 
 @app.route("/connectSat", methods=['POST'])
@@ -203,8 +203,8 @@ def getMac():
   dict_list = [row2dict(m) for m in macs]
   return flask.jsonify({"devices" : dict_list})
 
-@app.route("/songs")
-def songs():
+@app.route("/music")
+def music():
   form = f.ConnectSatellite()
   ccForm = f.ConnectCC()
   ccForm.room.choices = f.GetRooms()
@@ -217,29 +217,31 @@ def songs():
   return render_template('songs.html',songs=songs, form=form, ccForm=ccForm, mobileForm=mobileForm, lightForm=lightForm, songForm=songForm,roomForm=roomForm)
 
 
-@app.route("/play/<int:songId>", methods=['GET'])
+@app.route("/music/play/<int:songId>", methods=['GET'])
 def play(songId):
-    deviceForm = f.ConnectForm()
     songs = Song.query.all()
     ccC.StopCCs()
     roomIds = locC.GetCurrentRoomIds()
     songUrl = songC.GetSongUrl(songId)
     ccC.PlaySong(roomIds, songUrl)
     flash("Song is now playing")
-    return render_template('songs.html',form=deviceForm, songs=songs)
+    return redirect(url_for('music'))
 
 @app.route("/music/pause", methods=['GET'])
 def pause():
     songs = Song.query.all()
     ccC.PauseCCs()
+    print("Pausing song")
     flash("Song is now paused")
     return redirect(url_for('main'))
 
-@app.route("/music/volume/<int:roomId>/<int:volume>", methods=['POST'])
+@app.route("/music/volume/<int:roomId>/<int:volume>", methods=['PUT'])
 def volume(roomId, volume):
-    room = Room.query.filter(Room.id == roomId).filter()
+    room = Room.query.filter(Room.id == roomId).first()
     room.volume = volume
     db.session.commit()
+    ccC.SetVolume(roomId, volume)
+    return ''
 
 def connectPOST(request):
     if not request.json:

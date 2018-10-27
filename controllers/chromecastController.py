@@ -23,7 +23,13 @@ def PauseCCs():
     mc = chromecast.media_controller
     mc.pause()
     
- 
+def SetVolume(roomId, volume):
+  chromecasts = db.session.query(CC).filter(CC.roomId == roomId).all()
+  print(chromecasts)
+  print(volume/100)
+  for ccast in chromecasts:
+    cast = GetChromecast(ccast.name)
+    cast.set_volume(volume/100)
 
 def PlaySong(roomIds,song, songTime=0):
   chromecasts = db.session.query(CC).filter(CC.roomId.in_(roomIds)).all()
