@@ -27,7 +27,7 @@ def GetLights():
 
 
 class ConnectLight(FlaskForm):
-    name = SelectField("Select light", choices=GetLights())
+    name = SelectField("Select light", choices=[])
     room = SelectField("Room", choices=GetRooms())
     submit = SubmitField("Connect")
 

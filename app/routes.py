@@ -28,6 +28,7 @@ def main():
     mobileForm = f.ConnectMobile()
     lightForm = f.ConnectLight()
     lightForm.room.choices = f.GetRooms()
+    lightForm.name.choices = f.GetLights()
     songForm = f.ConnectSong()
     roomForm = f.ConnectRoom()
     r = Room.query.all()
@@ -269,6 +270,11 @@ def pause(roomId, paused):
     ccC.SetPaused(roomId, paused)
     return redirect(url_for('main'))
 
+@app.route("/coloring")
+def coloring():
+    v = lC.ConvertHexToHSL("#FF55FF")
+    lC.ChangeColor(1,v)
+    return ""
 
 def connectPOST(request):
     if not request.json:
