@@ -77,7 +77,7 @@ def ChangeRoom(roomIds):
         else:
             UpdateLight(light.id, off)
 
-def ConvertHexToHSL(hexColor):
+def ConvertHexToXY(hexColor):
     # First convert hex to rgb
     rgbColor = HexToRGB(hexColor)
     # Normalize RGB Color

@@ -6,7 +6,7 @@ import pychromecast
 from flask import flash, redirect, render_template, request, url_for
 
 from app import app, db
-from app.models import Mobile, Room, Satellite, Song
+from app.models import Mobile, Room, Satellite, Song, Light
 from controllers import chromecastController as ccC
 from controllers import formsController as fC
 from controllers import lightsController as lC
@@ -32,10 +32,12 @@ def main():
     songForm = f.ConnectSong()
     roomForm = f.ConnectRoom()
     r = Room.query.all()
+    lights = Light.query.all()
     songs = Song.query.all()
     return render_template(
         'info.html',
         rooms=r,
+        Lights = lights,
         form=form,
         songs=songs,
         ccForm=ccForm,
@@ -270,11 +272,12 @@ def pause(roomId, paused):
     ccC.SetPaused(roomId, paused)
     return redirect(url_for('main'))
 
-@app.route("/coloring")
-def coloring():
-    v = lC.ConvertHexToHSL("#FF55FF")
-    lC.ChangeColor(1,v)
-    return ""
+@app.route("/light/color/<int:lightId>/<string:color>", methods=['PUT'])
+def coloring(lightId, color):
+    print("set light to color  ", lightId, " ", color)
+    xy = lC.ConvertHexToXY(color)
+    lC.ChangeColor(lightId, xy)
+    return redirect(url_for('main'))
 
 def connectPOST(request):
     if not request.json:
