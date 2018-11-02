@@ -8,6 +8,7 @@ class Room(db.Model):
     name = db.Column(db.String(64))
     paused = db.Column(db.Integer, default=0)
     volume = db.Column(db.Integer, default=50)
+    lightsOn = db.Coulmn(db.Integer, default=1)
 
 
 class Mobile(db.Model):
@@ -50,9 +51,7 @@ class Light(db.Model):
     name = db.Column(db.String(64))
     roomId = db.Column(db.Integer, ForeignKey('room.id'))
     uuid = db.Column(db.Integer)
-    brightness = db.Column(db.Integer, default=254)
-    hue = db.Column(db.Integer, default=65535)
-    saturation = db.Column(db.Integer, default=0)
+    hex = db.Column(db.String(30))
 
 # '''
 # Room model:
