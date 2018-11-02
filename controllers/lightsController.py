@@ -46,7 +46,7 @@ def UpdateLight(nmbr, putData):
 
 def ChangeColor(nmbr, xy):
     x,y = xy
-    data = "{\"xy\":[" + str(x) + "," + str(y) + "]}"
+    data = {"xy":[ str(x) ,  str(y) ]}
     UpdateLight(nmbr, data)
 
 def ToggleLight(nmbr):
@@ -67,8 +67,8 @@ def UpdateLights(roomIds, putData):
 def ChangeRoom(roomIds):
     lights = db.session.query(Light).all()
 
-    on = "{\"on\":true}"
-    off = "{\"on\":false}"
+    on = {"on":"true"}
+    off = {"on":"false"}
 
     for light in lights:
         if any(roomId for roomId in roomIds if roomId ==

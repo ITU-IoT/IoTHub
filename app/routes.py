@@ -20,7 +20,7 @@ from forms import forms as f
 #   return "work ples"
 
 
-@app.route("/", methods=['POST', 'GET'])
+@app.route("/", methods=['POST', 'GET', 'PUT'])
 def main():
     form = f.ConnectSatellite()
     ccForm = f.ConnectCC()
@@ -272,12 +272,15 @@ def pause(roomId, paused):
     ccC.SetPaused(roomId, paused)
     return redirect(url_for('main'))
 
-@app.route("/light/color/<int:lightId>/<string:color>", methods=['PUT'])
+@app.route("/light/color/<string:lightId>/<string:color>", methods=['PUT','GET'])
 def coloring(lightId, color):
-    print("set light to color  ", lightId, " ", color)
-    xy = lC.ConvertHexToXY(color)
-    lC.ChangeColor(lightId, xy)
-    return redirect(url_for('main'))
+    if request.method == 'GET':
+        return redirect(url_for('main'))
+    elif request.method == 'PUT':
+        print("set light to color  ", lightId, " ", color)
+        xy = lC.ConvertHexToXY(color)
+        lC.ChangeColor(lightId, xy)
+        return redirect(url_for('main'))
 
 def connectPOST(request):
     if not request.json:

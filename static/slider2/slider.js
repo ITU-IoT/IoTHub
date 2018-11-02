@@ -11,13 +11,13 @@ function onSliderChange(value, roomId) {
 
 var lightColorTimeouts = [];
 function onLightChange(value, lightId) {
-  console.log(value.replace('#', ''));  
   var val = value.replace('#', '')
   clearTimeout(lightColorTimeouts[lightId]);
   lightColorTimeouts[lightId] = setTimeout(function() {
 	$.ajax({
-		type: 'PUT',
-		url: "/light/color/"+lightId+"/"+val
+		url: "/light/color/"+lightId+"/"+val,
+        type: 'PUT'
 	});
   }, 300);
 }
+
