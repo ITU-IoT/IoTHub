@@ -8,7 +8,7 @@ class Room(db.Model):
     name = db.Column(db.String(64))
     paused = db.Column(db.Integer, default=0)
     volume = db.Column(db.Integer, default=50)
-    lightsOn = db.Coulmn(db.Integer, default=1)
+    lightsOn = db.Column(db.Integer, default=1)
 
 
 class Mobile(db.Model):

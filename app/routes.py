@@ -272,12 +272,16 @@ def pause(roomId, paused):
     ccC.SetPaused(roomId, paused)
     return redirect(url_for('main'))
 
-@app.route("/light/color/<string:lightId>/<string:color>", methods=['PUT','GET'])
+@app.route("/light/color/<int:lightId>/<string:color>", methods=['PUT','GET'])
 def coloring(lightId, color):
     if request.method == 'GET':
         return redirect(url_for('main'))
     elif request.method == 'PUT':
-        print("set light to color  ", lightId, " ", color)
+        print(color)
+        light = db.session.query(Light).filter(Light.uuid == lightId).first()
+        light.hex = color
+        db.session.commit()
+        print(color)
         xy = lC.ConvertHexToXY(color)
         lC.ChangeColor(lightId, xy)
         return redirect(url_for('main'))

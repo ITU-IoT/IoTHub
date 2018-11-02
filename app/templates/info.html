@@ -51,7 +51,7 @@
                {% if light.roomId == room.id %}
                  <div style="text-align: center" class="col-md-6 card">
                    <h6>{{light.name}} </h6>
-                   <input type="color" value="#ff0000" class="form-control" onchange="onLightChange(this.value, {{light.uuid}})">
+                   <input type="color" value="#{{light.hex}}" class="form-control" onchange="onLightChange(this.value, {{light.uuid}})">
                  </div>
                {% endif %}
              {% endfor %}

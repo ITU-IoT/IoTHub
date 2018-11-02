@@ -36,17 +36,17 @@ def ShouldLightsTurnOn():
 
 def GetLights():
     lights = requests.get(address).json()
-    print(type(lights))
-
     return [(lId, l['name']) for lId, l in lights.items()]
 
 
 def UpdateLight(nmbr, putData):
-    r = requests.put(address + str(nmbr) + "/state", data=putData)
+    print("update light nr., ",nmbr, " with data: ", str(putData))
+    r = requests.put(address + str(nmbr) + "/state", data=str(putData))
 
 def ChangeColor(nmbr, xy):
     x,y = xy
-    data = {"xy":[ str(x) ,  str(y) ]}
+    data = {"xy":[x,y]}
+    print(data)
     UpdateLight(nmbr, data)
 
 def ToggleLight(nmbr):
