@@ -36,25 +36,30 @@ def ShouldLightsTurnOn():
 
 def GetLights():
     lights = requests.get(address).json()
-    print(type(lights))
-
     return [(lId, l['name']) for lId, l in lights.items()]
 
 
 def UpdateLight(nmbr, putData):
-    r = requests.put(address + str(nmbr) + "/state", data=putData)
+    print("update light nr., ",nmbr, " with data: ", str(putData))
+    r = requests.put(address + str(nmbr) + "/state", data=str(putData))
 
 def ChangeColor(nmbr, xy):
     x,y = xy
-    data = "{\"xy\":[" + str(x) + "," + str(y) + "]}"
+    data = {"xy":[x,y]}
+    print(data)
     UpdateLight(nmbr, data)
 
-def ToggleLight(nmbr):
-    lights = db.session.query(Light).filter(Light.roomId == nmbr).all()
-    if lights is None:
+def ToggleLights(roomId):
+    room = db.session.query(Room).filter(Room.id == roomId).first()
+    if room is None:
         return
-    light = requests.get(address).json()['on']
-
+    if room.lightsOn:
+        UpdateLight(roomId, str({'on':False}))
+        room.lightsOn = 0
+    else: 
+        UpdateLight(roomId, str({'on':True}))
+        room.lightsOn = 1
+    db.session.commit()
 
 def UpdateLights(roomIds, putData):
     lights = db.session.query(Light).all()
@@ -67,8 +72,8 @@ def UpdateLights(roomIds, putData):
 def ChangeRoom(roomIds):
     lights = db.session.query(Light).all()
 
-    on = "{\"on\":true}"
-    off = "{\"on\":false}"
+    on = {"on":"true"}
+    off = {"on":"false"}
 
     for light in lights:
         if any(roomId for roomId in roomIds if roomId ==
@@ -77,7 +82,7 @@ def ChangeRoom(roomIds):
         else:
             UpdateLight(light.id, off)
 
-def ConvertHexToHSL(hexColor):
+def ConvertHexToXY(hexColor):
     # First convert hex to rgb
     rgbColor = HexToRGB(hexColor)
     # Normalize RGB Color

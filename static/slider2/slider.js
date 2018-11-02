@@ -8,3 +8,16 @@ function onSliderChange(value, roomId) {
 	});
   }, 300);
 }
+
+var lightColorTimeouts = [];
+function onLightChange(value, lightId) {
+  var val = value.replace('#', '')
+  clearTimeout(lightColorTimeouts[lightId]);
+  lightColorTimeouts[lightId] = setTimeout(function() {
+	$.ajax({
+		url: "/light/color/"+lightId+"/"+val,
+        type: 'PUT'
+	});
+  }, 300);
+}
+
