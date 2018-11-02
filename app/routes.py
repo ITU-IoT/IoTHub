@@ -183,9 +183,10 @@ def updateLight(number):
     lC.UpdateLight(number, request.data)
 
 
-@app.route("/lights/toggle/<int:number>", methods=['POST'])
+@app.route("/lights/toggle/<int:number>", methods=['GET'])
 def toogleLight(number):
-    lC.toggleLights(number)
+    lC.ToggleLights(number)
+    return redirect(url_for('main'))
 
 
 @app.route("/h")

@@ -34,10 +34,17 @@
                   </div>
 	        </button>
               </a>
+              {% if room.lightsOn %}
+              <a href="/lights/toggle/{{room.id}}">
+                <button class="btn btn-primary">
+                <div class="room-lights">Lights ON</div>
 
+              {% else %}
               <a href="/lights/toggle/{{room.id}}">
                 <button class="btn btn-default">
-                  <div class="room-lights">Lights ON</div>
+                <div class="room-lights">Lights OFF</div>
+                        
+              {% endif %}
                 </button>
               </a>
               <div class="container">

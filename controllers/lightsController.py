@@ -49,12 +49,17 @@ def ChangeColor(nmbr, xy):
     print(data)
     UpdateLight(nmbr, data)
 
-def ToggleLight(nmbr):
-    lights = db.session.query(Light).filter(Light.roomId == nmbr).all()
-    if lights is None:
+def ToggleLights(roomId):
+    room = db.session.query(Room).filter(Room.id == roomId).first()
+    if room is None:
         return
-    light = requests.get(address).json()['on']
-
+    if room.lightsOn:
+        UpdateLight(roomId, str({'on':False}))
+        room.lightsOn = 0
+    else: 
+        UpdateLight(roomId, str({'on':True}))
+        room.lightsOn = 1
+    db.session.commit()
 
 def UpdateLights(roomIds, putData):
     lights = db.session.query(Light).all()
