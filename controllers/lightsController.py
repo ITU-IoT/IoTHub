@@ -51,13 +51,18 @@ def ChangeColor(nmbr, xy):
 
 def ToggleLights(roomId):
     room = db.session.query(Room).filter(Room.id == roomId).first()
+    lights = db.session.query(Light).join(Room, Room.id == Light.roomId).filter(Light.roomId == roomId).all()
     if room is None:
         return
     if room.lightsOn:
-        UpdateLight(roomId, str({'on':False}))
+        for light in lights:
+            UpdateLight(light.id, str({'on':False}))
         room.lightsOn = 0
-    else: 
-        UpdateLight(roomId, str({'on':True}))
+    else:
+        for light in lights:
+            x, y = ConvertHexToXY(light.hex)
+            UpdateLight(light.id, str({'on':True, 'xy':[x,y]}))
+        UpdateLights([roomId], str({'on':True}))
         room.lightsOn = 1
     db.session.commit()
 
@@ -70,17 +75,18 @@ def UpdateLights(roomIds, putData):
 
 
 def ChangeRoom(roomIds):
-    lights = db.session.query(Light).all()
-
-    on = {"on":"true"}
-    off = {"on":"false"}
-
-    for light in lights:
-        if any(roomId for roomId in roomIds if roomId ==
-               light.roomId) and ShouldLightsTurnOn():
-            UpdateLight(light.id, on)
+    onLights = db.session.query(Light).join(Room, Room.id == Light.roomId).filter(Light.roomId.in_(roomIds)).all()
+    offLights = db.session.query(Light).join(Room, Room.id == Light.roomId).filter(~Light.roomId.in_(roomIds)).all()
+    print("should turn on", ShouldLightsTurnOn())
+    print("lights", onLights)
+    for light in onLights:
+        if ShouldLightsTurnOn():
+            x, y = ConvertHexToXY(light.hex)
+            UpdateLight(light.id, str({'on':True, 'xy':[x,y]}))
         else:
-            UpdateLight(light.id, off)
+            UpdateLight(light.id, str({'on':False}))
+    for light in offLights:
+        UpdateLight(light.id, str({'on':False}))
 
 def ConvertHexToXY(hexColor):
     # First convert hex to rgb
