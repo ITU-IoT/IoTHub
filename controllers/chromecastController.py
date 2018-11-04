@@ -13,9 +13,12 @@ def StopCCs():
     chromecasts = db.session.query(CC).all()
 
     for ccast in chromecasts:
-        chromecast = GetChromecast(ccast.name)
+        chromecast = GetChromecast(ccast.name)        
+        print(chromecast.status)
         mc = chromecast.media_controller
-        mc.stop()
+        print(mc.status)
+        if mc.status.player_state == 'PLAYING':
+            mc.stop()
 
 
 def PauseCCs():
