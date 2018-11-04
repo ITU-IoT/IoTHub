@@ -75,12 +75,10 @@ def UpdateLights(roomIds, putData):
 
 
 def ChangeRoom(roomIds):
-    onLights = db.session.query(Light).join(Room, Room.id == Light.roomId).filter(Light.roomId.in_(roomIds)).all()
+    onLights = db.session.query(Light, Room).join(Room, Room.id == Light.roomId).filter(Light.roomId.in_(roomIds)).all()
     offLights = db.session.query(Light).join(Room, Room.id == Light.roomId).filter(~Light.roomId.in_(roomIds)).all()
-    print("should turn on", ShouldLightsTurnOn())
-    print("lights", onLights)
-    for light in onLights:
-        if ShouldLightsTurnOn():
+    for light, room in onLights:
+        if ShouldLightsTurnOn() and room.lightsOn:
             x, y = ConvertHexToXY(light.hex)
             UpdateLight(light.id, str({'on':True, 'xy':[x,y]}))
         else:
