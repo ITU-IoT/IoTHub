@@ -5,9 +5,12 @@ import pychromecast
 from app import db
 from app.models import CC, Room, Song
 
-CHROMECASTS = pychromecast.get_chromecasts()      # Takes time to load!
-print("Done loading chromecasts")
+def GetChromecasts():
+    res = pychromecast.get_chromecasts()      # Takes time to load!
+    print("Done loading chromecasts")
+    return res
 
+CHROMECASTS = GetChromecasts()
 
 def StopCCs():
     chromecasts = db.session.query(CC).all()
