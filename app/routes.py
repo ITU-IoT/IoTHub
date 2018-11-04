@@ -173,11 +173,6 @@ def connectRoom():
         return redirect(url_for('main'))
 
 
-@app.route("/home")
-def home():
-    return render_template("front.html")
-
-
 @app.route("/lights/<int:number>", methods=['PUT'])
 def updateLight(number):
     lC.UpdateLight(number, request.data)
@@ -187,12 +182,6 @@ def updateLight(number):
 def toogleLight(number):
     lC.ToggleLights(number)
     return redirect(url_for('main'))
-
-
-@app.route("/h")
-def h():
-    ccC.PlaySong([1], "http://iot.alssys.dk/sample.mp3")
-    return ""
 
 
 @app.route("/sensor/light", methods=['POST'])
@@ -207,11 +196,6 @@ def light():
     lC.SetAmbientBrightness(json['value'])
 
     return("")
-
-
-@app.route("/ttt")
-def ttt():
-    return str(ccC.IsPlaying("Bumboks"))
 
 
 @app.route("/sensor/beacon", methods=['POST'])
