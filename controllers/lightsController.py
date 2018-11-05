@@ -7,7 +7,7 @@ from astral import Astral
 from app import db
 from app.models import Light, Room
 
-address = "http://192.168.1.2/api/egZDzxX7ctoCDoXLKTxAPom6-a29XpVoQw1UvGpu/lights/"
+address = "http://localhost:8000/api/newdeveloper/lights/" #"http://192.168.1.2/api/egZDzxX7ctoCDoXLKTxAPom6-a29XpVoQw1UvGpu/lights/"
 ambientBrightness = 1000  # is a value between 0 and 1024
 
 CITY_NAME = 'Copenhagen'
